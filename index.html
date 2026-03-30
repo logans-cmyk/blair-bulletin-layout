@@ -11,7 +11,1101 @@
   #right { overflow: visible !important; background: white !important; padding: 0 !important; }
   #grid { gap: 10px !important; }
   .spread-wrap { break-inside: avoid; }
-  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { -webkit-print-<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magazine Layout Planner</title>
+<style>
+@media print {
+  #instructions,#left,#right-top,#legend{display:none!important;}
+  #wrap{display:block!important;}
+  #right{overflow:visible!important;background:white!important;padding:0!important;}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .story-group{break-inside:avoid;}
+  .drag-handle{display:none!important;}
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --bg-primary:#ffffff;
+  --bg-secondary:#f5f4f0;
+  --bg-tertiary:#efede8;
+  --text-primary:#1a1a18;
+  --text-secondary:#6b6a65;
+  --text-tertiary:#9e9d98;
+  --border-light:rgba(0,0,0,0.09);
+  --border-mid:rgba(0,0,0,0.16);
+  --radius-sm:5px;
+  --radius-md:8px;
+  --radius-lg:12px;
+  --accent:#378ADD;
+}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg-primary:#1e1e1c;
+    --bg-secondary:#272724;
+    --bg-tertiary:#2e2e2b;
+    --text-primary:#e8e6e0;
+    --text-secondary:#9e9d98;
+    --text-tertiary:#6b6a65;
+    --border-light:rgba(255,255,255,0.07);
+    --border-mid:rgba(255,255,255,0.13);
+  }
+}
+
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-tertiary);color:var(--text-primary);font-size:14px;line-height:1.5;display:flex;flex-direction:column;}
+
+#h1-bar{background:var(--bg-primary);border-bottom:0.5px solid var(--border-light);padding:11px 18px;display:flex;align-items:baseline;gap:10px;flex-shrink:0;}
+#h1-bar h1{font-size:14px;font-weight:600;color:var(--text-primary);}
+#h1-bar .subtitle{font-size:11px;color:var(--text-tertiary);}
+
+#page{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+
+#instructions{background:var(--bg-secondary);border-bottom:0.5px solid var(--border-light);padding:10px 18px;flex-shrink:0;}
+#instructions-hdr{display:flex;align-items:center;justify-content:space-between;}
+#instructions-hdr h3{font-size:11px;font-weight:600;color:var(--text-primary);}
+#instr-toggle{font-size:10px;color:var(--text-tertiary);cursor:pointer;background:none;border:none;font-family:inherit;text-decoration:underline;text-underline-offset:2px;}
+#instr-body{margin-top:7px;}
+#instr-body ol{font-size:11px;color:var(--text-secondary);line-height:1.65;padding-left:15px;display:flex;flex-direction:column;gap:2px;}
+#instr-tip{margin-top:6px;padding:5px 9px;background:var(--bg-primary);border-left:2px solid var(--border-mid);font-size:10px;color:var(--text-secondary);border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
+
+#wrap{display:flex;flex:1;overflow:hidden;}
+
+#left{width:310px;flex-shrink:0;border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;background:var(--bg-primary);}
+#left-top{padding:12px;border-bottom:0.5px solid var(--border-light);flex-shrink:0;}
+#left-top h2{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:8px;}
+
+#tab-bar{display:flex;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);overflow:hidden;margin-bottom:9px;}
+.tab-btn{flex:1;font-size:11px;padding:5px 4px;cursor:pointer;background:transparent;border:none;color:var(--text-secondary);font-family:inherit;}
+.tab-btn.active{background:var(--bg-secondary);color:var(--text-primary);font-weight:600;}
+
+#tab-manual{display:flex;flex-direction:column;gap:6px;}
+#tab-csv{display:none;flex-direction:column;gap:7px;}
+
+textarea{width:100%;min-height:75px;font-size:11px;padding:6px 8px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);resize:vertical;font-family:inherit;line-height:1.5;}
+textarea::placeholder{color:var(--text-tertiary);}
+
+button{font-family:inherit;font-size:11px;cursor:pointer;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);padding:5px 11px;transition:background 0.1s;}
+button:hover{background:var(--bg-secondary);}
+button:active{transform:scale(0.98);}
+#import-manual-btn{width:100%;}
+#apply-btn{margin:10px;width:calc(100% - 20px);font-size:12px;font-weight:600;padding:7px;}
+
+#drop-zone{border:1px dashed var(--border-mid);border-radius:var(--radius-md);padding:16px 10px;text-align:center;cursor:pointer;transition:background 0.15s;}
+#drop-zone:hover,#drop-zone.over{background:var(--bg-secondary);}
+#drop-zone p{font-size:11px;color:var(--text-secondary);margin-bottom:3px;}
+#drop-zone span{font-size:10px;color:var(--text-tertiary);}
+#csv-file-input{display:none;}
+#csv-note{font-size:10px;color:var(--text-tertiary);line-height:1.55;}
+
+#story-entries{flex:1;overflow-y:auto;padding:8px;}
+.entry-row{display:flex;align-items:center;gap:4px;padding:4px 5px;margin-bottom:3px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);background:var(--bg-primary);}
+.entry-num{font-size:10px;color:var(--text-tertiary);min-width:15px;text-align:right;flex-shrink:0;}
+.entry-title{flex:1;font-size:11px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.entry-select{font-size:10px;padding:2px;border-radius:3px;border:0.5px solid var(--border-mid);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;flex-shrink:0;font-family:inherit;}
+.entry-del{font-size:10px;color:var(--text-tertiary);cursor:pointer;flex-shrink:0;padding:0 2px;border:none;background:none;font-family:inherit;}
+.entry-del:hover{color:#A32D2D;}
+
+#right{flex:1;overflow:auto;background:var(--bg-tertiary);padding:14px;display:flex;flex-direction:column;}
+#right-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0;}
+#right-top label{font-size:11px;color:var(--text-secondary);}
+#pg-input{width:56px;font-size:11px;padding:4px 6px;}
+#status{font-size:11px;color:var(--text-secondary);margin-left:auto;}
+
+#legend{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;flex-shrink:0;}
+.leg{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--text-secondary);}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+#grid{display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex:1;}
+
+.story-group{
+  display:flex;flex-direction:column;gap:4px;
+  border-radius:var(--radius-md);
+  border:1.5px solid transparent;
+  padding:5px;
+  transition:border-color 0.15s,opacity 0.15s,background 0.15s;
+  cursor:grab;
+  background:var(--bg-tertiary);
+}
+.story-group:active{cursor:grabbing;}
+.story-group.dragging{opacity:0.25;}
+.story-group.drag-over-above{border-top-color:var(--accent);background:var(--bg-secondary);}
+.story-group.drag-over-below{border-bottom-color:var(--accent);background:var(--bg-secondary);}
+
+.story-group-header{display:flex;align-items:center;gap:6px;padding:0 2px 3px;}
+.drag-handle{font-size:12px;color:var(--text-tertiary);user-select:none;flex-shrink:0;cursor:grab;line-height:1;}
+.drag-handle:active{cursor:grabbing;}
+.story-group-title{font-size:10px;font-weight:600;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.story-group-pages{font-size:10px;color:var(--text-tertiary);flex-shrink:0;}
+
+.spreads-row{display:flex;gap:8px;align-items:flex-start;}
+.spread-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.spread-label{font-size:9px;color:var(--text-tertiary);letter-spacing:0.03em;text-transform:uppercase;}
+.spread{display:flex;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-primary);}
+.page-cell{flex:1;min-height:95px;display:flex;flex-direction:column;}
+.page-cell.left-page{border-right:2px solid var(--border-mid);}
+.pg-num{font-size:9px;color:var(--text-tertiary);padding:3px 5px 1px;line-height:1;flex-shrink:0;}
+.pg-num.right-num{text-align:right;}
+.pg-content{flex:1;padding:2px 5px 5px;display:flex;flex-direction:column;gap:2px;}
+.story-chip{border-radius:3px;padding:3px 5px;font-size:10px;font-weight:500;line-height:1.3;word-break:break-word;}
+.story-chip.cont{opacity:0.45;font-style:italic;font-weight:400;}
+.spine{width:5px;flex-shrink:0;background:var(--border-light);}
+</style>
+</head>
+<body>
+
+<div id="h1-bar">
+  <h1>Magazine Layout Planner</h1>
+  <span class="subtitle">Blair Academy Bulletin</span>
+</div>
+
+<div id="page">
+
+<div id="instructions">
+  <div id="instructions-hdr">
+    <h3>How to use this layout planner</h3>
+    <button id="instr-toggle" onclick="toggleInstr()">Hide</button>
+  </div>
+  <div id="instr-body">
+    <ol>
+      <li><strong>Add stories</strong> — paste titles one per line in Manual entry and click <em>Add stories</em>. Or switch to <em>Import CSV</em> and drag in your Google Sheets export. The app reads the Article, Section, and Pg Ct columns automatically.</li>
+      <li><strong>Set type &amp; pages</strong> — each story gets two dropdowns: one for type (Feature, Boilerplate, etc.) and one for how many pages it spans.</li>
+      <li><strong>Build layout</strong> — click <em>Build layout</em> to flow stories into facing spreads in list order. Multi-page stories show all their spreads grouped together.</li>
+      <li><strong>Drag to reorder</strong> — grab the <strong>⠿</strong> handle on any story group and drag it up or down. All spreads for that story move together as one unit. Page numbers update automatically.</li>
+      <li><strong>Export</strong> — <em>Export PDF</em> opens your browser's print dialog; choose "Save as PDF." <em>Export text</em> downloads a plain-text runsheet.</li>
+    </ol>
+    <div id="instr-tip">Color code: blue = Feature · green = Boilerplate · orange = Ad · red = Front/Cover story · purple = IFC/IBC · gray = Back cover. The counter in the toolbar shows pages used vs. remaining.</div>
+  </div>
+</div>
+
+<div id="wrap">
+
+  <div id="left">
+    <div id="left-top">
+      <h2>Story list</h2>
+      <div id="tab-bar">
+        <button class="tab-btn active" id="tab-manual-btn">Manual entry</button>
+        <button class="tab-btn" id="tab-csv-btn">Import CSV</button>
+      </div>
+      <div id="tab-manual">
+        <textarea id="paste-area" placeholder="Paste story titles here, one per line."></textarea>
+        <button id="import-manual-btn">Add stories</button>
+      </div>
+      <div id="tab-csv">
+        <div id="drop-zone">
+          <p>Drop your CSV file here</p>
+          <span>or click to browse</span>
+          <input type="file" id="csv-file-input" accept=".csv">
+        </div>
+        <div id="csv-note">Reads columns: Article, Section, Pg Ct. Rows with a blank Article are skipped. Page counts of 0 or 0.5 become 1.</div>
+      </div>
+    </div>
+    <div id="story-entries"></div>
+    <button id="apply-btn">Build layout</button>
+  </div>
+
+  <div id="right">
+    <div id="right-top">
+      <label>Total pages:</label>
+      <input type="number" id="pg-input" value="104" min="4" max="300" step="2">
+      <button id="rebuild-btn">Update</button>
+      <button id="export-pdf-btn">Export PDF</button>
+      <button id="export-txt-btn">Export text</button>
+      <span id="status"></span>
+    </div>
+    <div id="legend">
+      <div class="leg"><div class="leg-dot" style="background:#C8241A;"></div>Front cover</div>
+      <div class="leg"><div class="leg-dot" style="background:#D85A30;"></div>Cover story</div>
+      <div class="leg"><div class="leg-dot" style="background:#378ADD;"></div>Feature</div>
+      <div class="leg"><div class="leg-dot" style="background:#639922;"></div>Boilerplate</div>
+      <div class="leg"><div class="leg-dot" style="background:#BA7517;"></div>Ad</div>
+      <div class="leg"><div class="leg-dot" style="background:#7F77DD;"></div>IFC</div>
+      <div class="leg"><div class="leg-dot" style="background:#534AB7;"></div>IBC</div>
+      <div class="leg"><div class="leg-dot" style="background:#444441;"></div>Back cover</div>
+    </div>
+    <div id="grid"></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+let stories=[];
+let storyOrder=[];
+let totalPages=104;
+let idSeq=0;
+let instrVisible=true;
+let dragSrcId=null;
+
+function toggleInstr(){
+  instrVisible=!instrVisible;
+  document.getElementById('instr-body').style.display=instrVisible?'block':'none';
+  document.getElementById('instr-toggle').textContent=instrVisible?'Hide':'Show';
+}
+
+const TYPES=[
+  {v:'frontcover', l:'Front cover',       bg:'#FDECEA',color:'#7D0E08'},
+  {v:'coverstory', l:'Cover story',        bg:'#FAECE7',color:'#712B13'},
+  {v:'feature',    l:'Feature',            bg:'#E6F1FB',color:'#0C447C'},
+  {v:'boilerplate',l:'Boilerplate',        bg:'#EAF3DE',color:'#27500A'},
+  {v:'ad',         l:'Ad',                 bg:'#FAEEDA',color:'#633806'},
+  {v:'ifc',        l:'Inside front cover', bg:'#EEEDFE',color:'#3C3489'},
+  {v:'ibc',        l:'Inside back cover',  bg:'#D9D6F8',color:'#26215C'},
+  {v:'backcover',  l:'Back cover',         bg:'#D3D1C7',color:'#2C2C2A'},
+];
+const TYPE_MAP={};
+TYPES.forEach(t=>TYPE_MAP[t.v]=t);
+
+function guessType(section,title){
+  const s=(section||'').toLowerCase(),ti=(title||'').toLowerCase();
+  if(s.includes('outside back')||ti.includes('back cover')) return 'backcover';
+  if(s.includes('inside back')||s.includes('ibc')) return 'ibc';
+  if(s.includes('inside cover')||s.includes('ifc')||s.includes('inside front')) return 'ifc';
+  if(s.includes('feature')) return 'feature';
+  if(s.includes('cover story')||ti.includes('cover story')) return 'coverstory';
+  if(s.includes('ad')||ti.includes('blair fund ad')) return 'ad';
+  return 'boilerplate';
+}
+
+function chipStyle(type){
+  const t=TYPE_MAP[type]||TYPE_MAP['boilerplate'];
+  return `background:${t.bg};color:${t.color};`;
+}
+
+function makeEntryRow(story,index){
+  const row=document.createElement('div');
+  row.className='entry-row';
+  const num=document.createElement('div');num.className='entry-num';num.textContent=(index+1)+'';
+  const title=document.createElement('div');title.className='entry-title';title.textContent=story.title;title.title=story.title;
+  const tsel=document.createElement('select');tsel.className='entry-select';tsel.style.width='110px';
+  TYPES.forEach(o=>{
+    const opt=document.createElement('option');opt.value=o.v;opt.textContent=o.l;
+    if(o.v===story.type)opt.selected=true;tsel.appendChild(opt);
+  });
+  tsel.addEventListener('change',()=>{story.type=tsel.value;});
+  const psel=document.createElement('select');psel.className='entry-select';psel.style.width='40px';
+  [1,2,3,4,5,6,7,8,9,10,12,16,24].forEach(n=>{
+    const opt=document.createElement('option');opt.value=n;opt.textContent=n+'p';
+    if(n===story.pages)opt.selected=true;psel.appendChild(opt);
+  });
+  psel.addEventListener('change',()=>{story.pages=parseInt(psel.value);});
+  const del=document.createElement('button');del.className='entry-del';del.textContent='✕';del.title='Remove story';
+  del.addEventListener('click',()=>{
+    stories=stories.filter(s=>s.id!==story.id);
+    storyOrder=storyOrder.filter(id=>id!==story.id);
+    renderEntries();
+  });
+  row.appendChild(num);row.appendChild(title);row.appendChild(tsel);row.appendChild(psel);row.appendChild(del);
+  return row;
+}
+
+function renderEntries(){
+  const el=document.getElementById('story-entries');
+  el.innerHTML='';
+  if(!storyOrder.length){
+    el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);padding:10px 6px;">Add stories using either tab above.</div>';
+    return;
+  }
+  storyOrder.forEach((id,i)=>{
+    const s=stories.find(x=>x.id===id);
+    if(s)el.appendChild(makeEntryRow(s,i));
+  });
+}
+
+function addManualStories(){
+  const raw=document.getElementById('paste-area').value.trim();
+  if(!raw)return;
+  raw.split('\n').forEach(line=>{
+    line=line.trim();
+    if(!line)return;
+    const s={id:'s'+(++idSeq),title:line,type:'boilerplate',pages:2};
+    stories.push(s);storyOrder.push(s.id);
+  });
+  document.getElementById('paste-area').value='';
+  renderEntries();
+}
+
+function splitCSVLine(line){
+  const cols=[];let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){inQ=!inQ;continue;}
+    if(ch===','&&!inQ){cols.push(cur);cur='';continue;}
+    cur+=ch;
+  }
+  cols.push(cur);return cols;
+}
+
+function parseCSV(text){
+  const lines=text.split(/\r?\n/);
+  let headerRow=-1,colArticle=-1,colSection=-1,colPgCt=-1;
+  for(let i=0;i<Math.min(lines.length,6);i++){
+    const cols=splitCSVLine(lines[i]);
+    const ai=cols.findIndex(c=>/article/i.test(c.trim()));
+    if(ai>=0){
+      headerRow=i;colArticle=ai;
+      colSection=cols.findIndex(c=>/section/i.test(c.trim()));
+      colPgCt=cols.findIndex(c=>/pg.?ct|page.?count|pages/i.test(c.trim()));
+      break;
+    }
+  }
+  if(headerRow<0){alert('Could not find an "Article" column in your CSV.');return;}
+  for(let i=headerRow+1;i<lines.length;i++){
+    const cols=splitCSVLine(lines[i]);
+    const title=(colArticle>=0?cols[colArticle]||'':'').trim();
+    if(!title)continue;
+    const section=colSection>=0?(cols[colSection]||'').trim():'';
+    const pgRaw=colPgCt>=0?(cols[colPgCt]||'0').trim():'2';
+    let pages=Math.round(parseFloat(pgRaw)||0);
+    if(pages<1)pages=1;
+    const s={id:'s'+(++idSeq),title,type:guessType(section,title),pages};
+    stories.push(s);storyOrder.push(s.id);
+  }
+  renderEntries();
+  buildLayout();
+}
+
+function computePageStarts(){
+  const starts={};
+  let page=0;
+  storyOrder.forEach(id=>{
+    const s=stories.find(x=>x.id===id);
+    if(!s)return;
+    starts[id]=page;
+    page+=s.pages;
+  });
+  return starts;
+}
+
+function makePageCell(pageLabel,isLeft,story,isFirst){
+  const cell=document.createElement('div');
+  cell.className='page-cell '+(isLeft?'left-page':'right-page');
+  const pgNum=document.createElement('div');
+  pgNum.className='pg-num'+(!isLeft?' right-num':'');
+  pgNum.textContent=pageLabel;
+  cell.appendChild(pgNum);
+  const content=document.createElement('div');
+  content.className='pg-content';
+  if(story){
+    const chip=document.createElement('div');
+    if(isFirst&&isLeft){
+      chip.className='story-chip';
+      chip.style.cssText=chipStyle(story.type);
+      chip.textContent=story.title;
+    } else {
+      chip.className='story-chip cont';
+      chip.style.cssText=chipStyle(story.type);
+      chip.textContent='— cont.';
+    }
+    content.appendChild(chip);
+  }
+  cell.appendChild(content);
+  return cell;
+}
+
+function buildLayout(){
+  totalPages=parseInt(document.getElementById('pg-input').value)||104;
+  renderGrid();
+}
+
+function renderGrid(){
+  const pageStarts=computePageStarts();
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  const SPREADS_PER_ROW=3;
+
+  storyOrder.forEach(id=>{
+    const story=stories.find(x=>x.id===id);
+    if(!story)return;
+    const startPage=pageStarts[id]||0;
+
+    const group=document.createElement('div');
+    group.className='story-group';
+    group.dataset.id=id;
+    group.draggable=true;
+
+    const header=document.createElement('div');
+    header.className='story-group-header';
+    const handle=document.createElement('span');
+    handle.className='drag-handle';handle.textContent='⠿';handle.title='Drag to reorder';
+    const gtitle=document.createElement('div');
+    gtitle.className='story-group-title';gtitle.textContent=story.title;gtitle.title=story.title;
+    const gpages=document.createElement('div');
+    gpages.className='story-group-pages';
+    const startLabel=startPage===0?'Cover':startPage;
+    const endLabel=story.pages>1?startPage+story.pages-1:'';
+    gpages.textContent=story.pages+'p · pp.'+(endLabel?startLabel+' – '+endLabel:startLabel);
+    header.appendChild(handle);header.appendChild(gtitle);header.appendChild(gpages);
+    group.appendChild(header);
+
+    const spreads=[];
+    for(let i=0;i<story.pages;i+=2){
+      spreads.push({lp:startPage+i,rp:(i+1<story.pages)?startPage+i+1:null,isFirst:i===0});
+    }
+
+    for(let row=0;row<spreads.length;row+=SPREADS_PER_ROW){
+      const rowDiv=document.createElement('div');
+      rowDiv.className='spreads-row';
+      const chunk=spreads.slice(row,row+SPREADS_PER_ROW);
+      chunk.forEach(sp=>{
+        const wrap=document.createElement('div');wrap.className='spread-wrap';
+        const lbl=document.createElement('div');lbl.className='spread-label';
+        lbl.textContent=sp.lp===0?'Cover spread':'pp.'+sp.lp+(sp.rp!=null?' – '+sp.rp:'');
+        wrap.appendChild(lbl);
+        const spreadDiv=document.createElement('div');spreadDiv.className='spread';
+        spreadDiv.appendChild(makePageCell(sp.lp===0?'Cover':sp.lp,true,story,sp.isFirst));
+        const spine=document.createElement('div');spine.className='spine';spreadDiv.appendChild(spine);
+        if(sp.rp!=null){
+          spreadDiv.appendChild(makePageCell(sp.rp,false,story,false));
+        } else {
+          const blank=document.createElement('div');blank.className='page-cell right-page';
+          blank.style.background='var(--bg-secondary)';spreadDiv.appendChild(blank);
+        }
+        wrap.appendChild(spreadDiv);rowDiv.appendChild(wrap);
+      });
+      for(let r=chunk.length;r<SPREADS_PER_ROW;r++){
+        const ph=document.createElement('div');ph.style.flex='1';rowDiv.appendChild(ph);
+      }
+      group.appendChild(rowDiv);
+    }
+
+    group.addEventListener('dragstart',e=>{
+      dragSrcId=id;e.dataTransfer.effectAllowed='move';
+      setTimeout(()=>group.classList.add('dragging'),0);
+    });
+    group.addEventListener('dragend',()=>{
+      group.classList.remove('dragging');
+      document.querySelectorAll('.story-group').forEach(g=>g.classList.remove('drag-over-above','drag-over-below'));
+      dragSrcId=null;
+    });
+    group.addEventListener('dragover',e=>{
+      e.preventDefault();
+      if(!dragSrcId||dragSrcId===id)return;
+      const rect=group.getBoundingClientRect();
+      document.querySelectorAll('.story-group').forEach(g=>g.classList.remove('drag-over-above','drag-over-below'));
+      group.classList.add(e.clientY<rect.top+rect.height/2?'drag-over-above':'drag-over-below');
+    });
+    group.addEventListener('dragleave',e=>{
+      if(!group.contains(e.relatedTarget))group.classList.remove('drag-over-above','drag-over-below');
+    });
+    group.addEventListener('drop',e=>{
+      e.preventDefault();
+      if(!dragSrcId||dragSrcId===id)return;
+      const rect=group.getBoundingClientRect();
+      const insertBefore=e.clientY<rect.top+rect.height/2;
+      const srcIdx=storyOrder.indexOf(dragSrcId);
+      storyOrder.splice(srcIdx,1);
+      const newTgt=storyOrder.indexOf(id);
+      storyOrder.splice(insertBefore?newTgt:newTgt+1,0,dragSrcId);
+      renderEntries();renderGrid();
+    });
+
+    grid.appendChild(group);
+  });
+
+  const totalUsed=storyOrder.reduce((a,id)=>{const s=stories.find(x=>x.id===id);return a+(s?s.pages:0);},0);
+  const remaining=totalPages-totalUsed;
+  document.getElementById('status').textContent=
+    storyOrder.length+' stories · '+totalUsed+'pp used · '+(remaining>=0?remaining+'pp open':Math.abs(remaining)+'pp over');
+}
+
+document.getElementById('import-manual-btn').addEventListener('click',addManualStories);
+document.getElementById('apply-btn').addEventListener('click',buildLayout);
+document.getElementById('rebuild-btn').addEventListener('click',buildLayout);
+document.getElementById('export-pdf-btn').addEventListener('click',()=>window.print());
+document.getElementById('export-txt-btn').addEventListener('click',()=>{
+  const pageStarts=computePageStarts();
+  const lines=['LAYOUT PLAN','============'];
+  storyOrder.forEach(id=>{
+    const s=stories.find(x=>x.id===id);if(!s)return;
+    const sp=pageStarts[id]||0;
+    for(let i=0;i<s.pages;i+=2){
+      const lp=sp+i,rp=i+1<s.pages?sp+i+1:null;
+      const lpStr=String(lp===0?'Cover':lp).padStart(3);
+      const rpStr=rp!=null?String(rp).padStart(3):'   ';
+      lines.push('pp.'+lpStr+' | '+rpStr+'   '+(i===0?s.title:'— cont.'));
+    }
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='layout_plan.txt';a.click();
+});
+
+document.getElementById('tab-manual-btn').addEventListener('click',()=>{
+  document.getElementById('tab-manual').style.display='flex';document.getElementById('tab-csv').style.display='none';
+  document.getElementById('tab-manual-btn').classList.add('active');document.getElementById('tab-csv-btn').classList.remove('active');
+});
+document.getElementById('tab-csv-btn').addEventListener('click',()=>{
+  document.getElementById('tab-csv').style.display='flex';document.getElementById('tab-manual').style.display='none';
+  document.getElementById('tab-csv-btn').classList.add('active');document.getElementById('tab-manual-btn').classList.remove('active');
+});
+
+const dropZone=document.getElementById('drop-zone');
+const fileInput=document.getElementById('csv-file-input');
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('over');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('over'));
+dropZone.addEventListener('drop',e=>{
+  e.preventDefault();dropZone.classList.remove('over');
+  if(e.dataTransfer.files[0])readFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change',()=>{if(fileInput.files[0])readFile(fileInput.files[0]);});
+function readFile(file){const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(file);}
+</script>
+</body>
+</html>
+color-adj<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Magazine Layout Planner</title>
+<style>
+@media print {
+  #instructions,#left,#right-top,#legend{display:none!important;}
+  #wrap{display:block!important;}
+  #right{overflow:visible!important;background:white!important;padding:0!important;}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .story-group{break-inside:avoid;}
+  .drag-handle{display:none!important;}
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --bg-primary:#ffffff;
+  --bg-secondary:#f5f4f0;
+  --bg-tertiary:#efede8;
+  --text-primary:#1a1a18;
+  --text-secondary:#6b6a65;
+  --text-tertiary:#9e9d98;
+  --border-light:rgba(0,0,0,0.09);
+  --border-mid:rgba(0,0,0,0.16);
+  --radius-sm:5px;
+  --radius-md:8px;
+  --radius-lg:12px;
+  --accent:#378ADD;
+}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg-primary:#1e1e1c;
+    --bg-secondary:#272724;
+    --bg-tertiary:#2e2e2b;
+    --text-primary:#e8e6e0;
+    --text-secondary:#9e9d98;
+    --text-tertiary:#6b6a65;
+    --border-light:rgba(255,255,255,0.07);
+    --border-mid:rgba(255,255,255,0.13);
+  }
+}
+
+html,body{height:100%;overflow:hidden;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-tertiary);color:var(--text-primary);font-size:14px;line-height:1.5;display:flex;flex-direction:column;}
+
+#h1-bar{background:var(--bg-primary);border-bottom:0.5px solid var(--border-light);padding:11px 18px;display:flex;align-items:baseline;gap:10px;flex-shrink:0;}
+#h1-bar h1{font-size:14px;font-weight:600;color:var(--text-primary);}
+#h1-bar .subtitle{font-size:11px;color:var(--text-tertiary);}
+
+#page{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+
+#instructions{background:var(--bg-secondary);border-bottom:0.5px solid var(--border-light);padding:10px 18px;flex-shrink:0;}
+#instructions-hdr{display:flex;align-items:center;justify-content:space-between;}
+#instructions-hdr h3{font-size:11px;font-weight:600;color:var(--text-primary);}
+#instr-toggle{font-size:10px;color:var(--text-tertiary);cursor:pointer;background:none;border:none;font-family:inherit;text-decoration:underline;text-underline-offset:2px;}
+#instr-body{margin-top:7px;}
+#instr-body ol{font-size:11px;color:var(--text-secondary);line-height:1.65;padding-left:15px;display:flex;flex-direction:column;gap:2px;}
+#instr-tip{margin-top:6px;padding:5px 9px;background:var(--bg-primary);border-left:2px solid var(--border-mid);font-size:10px;color:var(--text-secondary);border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
+
+#wrap{display:flex;flex:1;overflow:hidden;}
+
+#left{width:310px;flex-shrink:0;border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;background:var(--bg-primary);}
+#left-top{padding:12px;border-bottom:0.5px solid var(--border-light);flex-shrink:0;}
+#left-top h2{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:8px;}
+
+#tab-bar{display:flex;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);overflow:hidden;margin-bottom:9px;}
+.tab-btn{flex:1;font-size:11px;padding:5px 4px;cursor:pointer;background:transparent;border:none;color:var(--text-secondary);font-family:inherit;}
+.tab-btn.active{background:var(--bg-secondary);color:var(--text-primary);font-weight:600;}
+
+#tab-manual{display:flex;flex-direction:column;gap:6px;}
+#tab-csv{display:none;flex-direction:column;gap:7px;}
+
+textarea{width:100%;min-height:75px;font-size:11px;padding:6px 8px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);resize:vertical;font-family:inherit;line-height:1.5;}
+textarea::placeholder{color:var(--text-tertiary);}
+
+button{font-family:inherit;font-size:11px;cursor:pointer;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);padding:5px 11px;transition:background 0.1s;}
+button:hover{background:var(--bg-secondary);}
+button:active{transform:scale(0.98);}
+#import-manual-btn{width:100%;}
+#apply-btn{margin:10px;width:calc(100% - 20px);font-size:12px;font-weight:600;padding:7px;}
+
+#drop-zone{border:1px dashed var(--border-mid);border-radius:var(--radius-md);padding:16px 10px;text-align:center;cursor:pointer;transition:background 0.15s;}
+#drop-zone:hover,#drop-zone.over{background:var(--bg-secondary);}
+#drop-zone p{font-size:11px;color:var(--text-secondary);margin-bottom:3px;}
+#drop-zone span{font-size:10px;color:var(--text-tertiary);}
+#csv-file-input{display:none;}
+#csv-note{font-size:10px;color:var(--text-tertiary);line-height:1.55;}
+
+#story-entries{flex:1;overflow-y:auto;padding:8px;}
+.entry-row{display:flex;align-items:center;gap:4px;padding:4px 5px;margin-bottom:3px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);background:var(--bg-primary);}
+.entry-num{font-size:10px;color:var(--text-tertiary);min-width:15px;text-align:right;flex-shrink:0;}
+.entry-title{flex:1;font-size:11px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
+.entry-select{font-size:10px;padding:2px;border-radius:3px;border:0.5px solid var(--border-mid);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;flex-shrink:0;font-family:inherit;}
+.entry-del{font-size:10px;color:var(--text-tertiary);cursor:pointer;flex-shrink:0;padding:0 2px;border:none;background:none;font-family:inherit;}
+.entry-del:hover{color:#A32D2D;}
+
+#right{flex:1;overflow:auto;background:var(--bg-tertiary);padding:14px;display:flex;flex-direction:column;}
+#right-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0;}
+#right-top label{font-size:11px;color:var(--text-secondary);}
+#pg-input{width:56px;font-size:11px;padding:4px 6px;}
+#status{font-size:11px;color:var(--text-secondary);margin-left:auto;}
+
+#legend{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;flex-shrink:0;}
+.leg{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--text-secondary);}
+.leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
+#grid{display:flex;flex-direction:column;gap:6px;overflow-y:auto;flex:1;}
+
+.story-group{
+  display:flex;flex-direction:column;gap:4px;
+  border-radius:var(--radius-md);
+  border:1.5px solid transparent;
+  padding:5px;
+  transition:border-color 0.15s,opacity 0.15s,background 0.15s;
+  cursor:grab;
+  background:var(--bg-tertiary);
+}
+.story-group:active{cursor:grabbing;}
+.story-group.dragging{opacity:0.25;}
+.story-group.drag-over-above{border-top-color:var(--accent);background:var(--bg-secondary);}
+.story-group.drag-over-below{border-bottom-color:var(--accent);background:var(--bg-secondary);}
+
+.story-group-header{display:flex;align-items:center;gap:6px;padding:0 2px 3px;}
+.drag-handle{font-size:12px;color:var(--text-tertiary);user-select:none;flex-shrink:0;cursor:grab;line-height:1;}
+.drag-handle:active{cursor:grabbing;}
+.story-group-title{font-size:10px;font-weight:600;color:var(--text-secondary);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.story-group-pages{font-size:10px;color:var(--text-tertiary);flex-shrink:0;}
+
+.spreads-row{display:flex;gap:8px;align-items:flex-start;}
+.spread-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.spread-label{font-size:9px;color:var(--text-tertiary);letter-spacing:0.03em;text-transform:uppercase;}
+.spread{display:flex;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-primary);}
+.page-cell{flex:1;min-height:95px;display:flex;flex-direction:column;}
+.page-cell.left-page{border-right:2px solid var(--border-mid);}
+.pg-num{font-size:9px;color:var(--text-tertiary);padding:3px 5px 1px;line-height:1;flex-shrink:0;}
+.pg-num.right-num{text-align:right;}
+.pg-content{flex:1;padding:2px 5px 5px;display:flex;flex-direction:column;gap:2px;}
+.story-chip{border-radius:3px;padding:3px 5px;font-size:10px;font-weight:500;line-height:1.3;word-break:break-word;}
+.story-chip.cont{opacity:0.45;font-style:italic;font-weight:400;}
+.spine{width:5px;flex-shrink:0;background:var(--border-light);}
+</style>
+</head>
+<body>
+
+<div id="h1-bar">
+  <h1>Magazine Layout Planner</h1>
+  <span class="subtitle">Blair Academy Bulletin</span>
+</div>
+
+<div id="page">
+
+<div id="instructions">
+  <div id="instructions-hdr">
+    <h3>How to use this layout planner</h3>
+    <button id="instr-toggle" onclick="toggleInstr()">Hide</button>
+  </div>
+  <div id="instr-body">
+    <ol>
+      <li><strong>Add stories</strong> — paste titles one per line in Manual entry and click <em>Add stories</em>. Or switch to <em>Import CSV</em> and drag in your Google Sheets export. The app reads the Article, Section, and Pg Ct columns automatically.</li>
+      <li><strong>Set type &amp; pages</strong> — each story gets two dropdowns: one for type (Feature, Boilerplate, etc.) and one for how many pages it spans.</li>
+      <li><strong>Build layout</strong> — click <em>Build layout</em> to flow stories into facing spreads in list order. Multi-page stories show all their spreads grouped together.</li>
+      <li><strong>Drag to reorder</strong> — grab the <strong>⠿</strong> handle on any story group and drag it up or down. All spreads for that story move together as one unit. Page numbers update automatically.</li>
+      <li><strong>Export</strong> — <em>Export PDF</em> opens your browser's print dialog; choose "Save as PDF." <em>Export text</em> downloads a plain-text runsheet.</li>
+    </ol>
+    <div id="instr-tip">Color code: blue = Feature · green = Boilerplate · orange = Ad · red = Front/Cover story · purple = IFC/IBC · gray = Back cover. The counter in the toolbar shows pages used vs. remaining.</div>
+  </div>
+</div>
+
+<div id="wrap">
+
+  <div id="left">
+    <div id="left-top">
+      <h2>Story list</h2>
+      <div id="tab-bar">
+        <button class="tab-btn active" id="tab-manual-btn">Manual entry</button>
+        <button class="tab-btn" id="tab-csv-btn">Import CSV</button>
+      </div>
+      <div id="tab-manual">
+        <textarea id="paste-area" placeholder="Paste story titles here, one per line."></textarea>
+        <button id="import-manual-btn">Add stories</button>
+      </div>
+      <div id="tab-csv">
+        <div id="drop-zone">
+          <p>Drop your CSV file here</p>
+          <span>or click to browse</span>
+          <input type="file" id="csv-file-input" accept=".csv">
+        </div>
+        <div id="csv-note">Reads columns: Article, Section, Pg Ct. Rows with a blank Article are skipped. Page counts of 0 or 0.5 become 1.</div>
+      </div>
+    </div>
+    <div id="story-entries"></div>
+    <button id="apply-btn">Build layout</button>
+  </div>
+
+  <div id="right">
+    <div id="right-top">
+      <label>Total pages:</label>
+      <input type="number" id="pg-input" value="104" min="4" max="300" step="2">
+      <button id="rebuild-btn">Update</button>
+      <button id="export-pdf-btn">Export PDF</button>
+      <button id="export-txt-btn">Export text</button>
+      <span id="status"></span>
+    </div>
+    <div id="legend">
+      <div class="leg"><div class="leg-dot" style="background:#C8241A;"></div>Front cover</div>
+      <div class="leg"><div class="leg-dot" style="background:#D85A30;"></div>Cover story</div>
+      <div class="leg"><div class="leg-dot" style="background:#378ADD;"></div>Feature</div>
+      <div class="leg"><div class="leg-dot" style="background:#639922;"></div>Boilerplate</div>
+      <div class="leg"><div class="leg-dot" style="background:#BA7517;"></div>Ad</div>
+      <div class="leg"><div class="leg-dot" style="background:#7F77DD;"></div>IFC</div>
+      <div class="leg"><div class="leg-dot" style="background:#534AB7;"></div>IBC</div>
+      <div class="leg"><div class="leg-dot" style="background:#444441;"></div>Back cover</div>
+    </div>
+    <div id="grid"></div>
+  </div>
+
+</div>
+</div>
+
+<script>
+let stories=[];
+let storyOrder=[];
+let totalPages=104;
+let idSeq=0;
+let instrVisible=true;
+let dragSrcId=null;
+
+function toggleInstr(){
+  instrVisible=!instrVisible;
+  document.getElementById('instr-body').style.display=instrVisible?'block':'none';
+  document.getElementById('instr-toggle').textContent=instrVisible?'Hide':'Show';
+}
+
+const TYPES=[
+  {v:'frontcover', l:'Front cover',       bg:'#FDECEA',color:'#7D0E08'},
+  {v:'coverstory', l:'Cover story',        bg:'#FAECE7',color:'#712B13'},
+  {v:'feature',    l:'Feature',            bg:'#E6F1FB',color:'#0C447C'},
+  {v:'boilerplate',l:'Boilerplate',        bg:'#EAF3DE',color:'#27500A'},
+  {v:'ad',         l:'Ad',                 bg:'#FAEEDA',color:'#633806'},
+  {v:'ifc',        l:'Inside front cover', bg:'#EEEDFE',color:'#3C3489'},
+  {v:'ibc',        l:'Inside back cover',  bg:'#D9D6F8',color:'#26215C'},
+  {v:'backcover',  l:'Back cover',         bg:'#D3D1C7',color:'#2C2C2A'},
+];
+const TYPE_MAP={};
+TYPES.forEach(t=>TYPE_MAP[t.v]=t);
+
+function guessType(section,title){
+  const s=(section||'').toLowerCase(),ti=(title||'').toLowerCase();
+  if(s.includes('outside back')||ti.includes('back cover')) return 'backcover';
+  if(s.includes('inside back')||s.includes('ibc')) return 'ibc';
+  if(s.includes('inside cover')||s.includes('ifc')||s.includes('inside front')) return 'ifc';
+  if(s.includes('feature')) return 'feature';
+  if(s.includes('cover story')||ti.includes('cover story')) return 'coverstory';
+  if(s.includes('ad')||ti.includes('blair fund ad')) return 'ad';
+  return 'boilerplate';
+}
+
+function chipStyle(type){
+  const t=TYPE_MAP[type]||TYPE_MAP['boilerplate'];
+  return `background:${t.bg};color:${t.color};`;
+}
+
+function makeEntryRow(story,index){
+  const row=document.createElement('div');
+  row.className='entry-row';
+  const num=document.createElement('div');num.className='entry-num';num.textContent=(index+1)+'';
+  const title=document.createElement('div');title.className='entry-title';title.textContent=story.title;title.title=story.title;
+  const tsel=document.createElement('select');tsel.className='entry-select';tsel.style.width='110px';
+  TYPES.forEach(o=>{
+    const opt=document.createElement('option');opt.value=o.v;opt.textContent=o.l;
+    if(o.v===story.type)opt.selected=true;tsel.appendChild(opt);
+  });
+  tsel.addEventListener('change',()=>{story.type=tsel.value;});
+  const psel=document.createElement('select');psel.className='entry-select';psel.style.width='40px';
+  [1,2,3,4,5,6,7,8,9,10,12,16,24].forEach(n=>{
+    const opt=document.createElement('option');opt.value=n;opt.textContent=n+'p';
+    if(n===story.pages)opt.selected=true;psel.appendChild(opt);
+  });
+  psel.addEventListener('change',()=>{story.pages=parseInt(psel.value);});
+  const del=document.createElement('button');del.className='entry-del';del.textContent='✕';del.title='Remove story';
+  del.addEventListener('click',()=>{
+    stories=stories.filter(s=>s.id!==story.id);
+    storyOrder=storyOrder.filter(id=>id!==story.id);
+    renderEntries();
+  });
+  row.appendChild(num);row.appendChild(title);row.appendChild(tsel);row.appendChild(psel);row.appendChild(del);
+  return row;
+}
+
+function renderEntries(){
+  const el=document.getElementById('story-entries');
+  el.innerHTML='';
+  if(!storyOrder.length){
+    el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);padding:10px 6px;">Add stories using either tab above.</div>';
+    return;
+  }
+  storyOrder.forEach((id,i)=>{
+    const s=stories.find(x=>x.id===id);
+    if(s)el.appendChild(makeEntryRow(s,i));
+  });
+}
+
+function addManualStories(){
+  const raw=document.getElementById('paste-area').value.trim();
+  if(!raw)return;
+  raw.split('\n').forEach(line=>{
+    line=line.trim();
+    if(!line)return;
+    const s={id:'s'+(++idSeq),title:line,type:'boilerplate',pages:2};
+    stories.push(s);storyOrder.push(s.id);
+  });
+  document.getElementById('paste-area').value='';
+  renderEntries();
+}
+
+function splitCSVLine(line){
+  const cols=[];let cur='',inQ=false;
+  for(let i=0;i<line.length;i++){
+    const ch=line[i];
+    if(ch==='"'){inQ=!inQ;continue;}
+    if(ch===','&&!inQ){cols.push(cur);cur='';continue;}
+    cur+=ch;
+  }
+  cols.push(cur);return cols;
+}
+
+function parseCSV(text){
+  const lines=text.split(/\r?\n/);
+  let headerRow=-1,colArticle=-1,colSection=-1,colPgCt=-1;
+  for(let i=0;i<Math.min(lines.length,6);i++){
+    const cols=splitCSVLine(lines[i]);
+    const ai=cols.findIndex(c=>/article/i.test(c.trim()));
+    if(ai>=0){
+      headerRow=i;colArticle=ai;
+      colSection=cols.findIndex(c=>/section/i.test(c.trim()));
+      colPgCt=cols.findIndex(c=>/pg.?ct|page.?count|pages/i.test(c.trim()));
+      break;
+    }
+  }
+  if(headerRow<0){alert('Could not find an "Article" column in your CSV.');return;}
+  for(let i=headerRow+1;i<lines.length;i++){
+    const cols=splitCSVLine(lines[i]);
+    const title=(colArticle>=0?cols[colArticle]||'':'').trim();
+    if(!title)continue;
+    const section=colSection>=0?(cols[colSection]||'').trim():'';
+    const pgRaw=colPgCt>=0?(cols[colPgCt]||'0').trim():'2';
+    let pages=Math.round(parseFloat(pgRaw)||0);
+    if(pages<1)pages=1;
+    const s={id:'s'+(++idSeq),title,type:guessType(section,title),pages};
+    stories.push(s);storyOrder.push(s.id);
+  }
+  renderEntries();
+  buildLayout();
+}
+
+function computePageStarts(){
+  const starts={};
+  let page=0;
+  storyOrder.forEach(id=>{
+    const s=stories.find(x=>x.id===id);
+    if(!s)return;
+    starts[id]=page;
+    page+=s.pages;
+  });
+  return starts;
+}
+
+function makePageCell(pageLabel,isLeft,story,isFirst){
+  const cell=document.createElement('div');
+  cell.className='page-cell '+(isLeft?'left-page':'right-page');
+  const pgNum=document.createElement('div');
+  pgNum.className='pg-num'+(!isLeft?' right-num':'');
+  pgNum.textContent=pageLabel;
+  cell.appendChild(pgNum);
+  const content=document.createElement('div');
+  content.className='pg-content';
+  if(story){
+    const chip=document.createElement('div');
+    if(isFirst&&isLeft){
+      chip.className='story-chip';
+      chip.style.cssText=chipStyle(story.type);
+      chip.textContent=story.title;
+    } else {
+      chip.className='story-chip cont';
+      chip.style.cssText=chipStyle(story.type);
+      chip.textContent='— cont.';
+    }
+    content.appendChild(chip);
+  }
+  cell.appendChild(content);
+  return cell;
+}
+
+function buildLayout(){
+  totalPages=parseInt(document.getElementById('pg-input').value)||104;
+  renderGrid();
+}
+
+function renderGrid(){
+  const pageStarts=computePageStarts();
+  const grid=document.getElementById('grid');
+  grid.innerHTML='';
+  const SPREADS_PER_ROW=3;
+
+  storyOrder.forEach(id=>{
+    const story=stories.find(x=>x.id===id);
+    if(!story)return;
+    const startPage=pageStarts[id]||0;
+
+    const group=document.createElement('div');
+    group.className='story-group';
+    group.dataset.id=id;
+    group.draggable=true;
+
+    const header=document.createElement('div');
+    header.className='story-group-header';
+    const handle=document.createElement('span');
+    handle.className='drag-handle';handle.textContent='⠿';handle.title='Drag to reorder';
+    const gtitle=document.createElement('div');
+    gtitle.className='story-group-title';gtitle.textContent=story.title;gtitle.title=story.title;
+    const gpages=document.createElement('div');
+    gpages.className='story-group-pages';
+    const startLabel=startPage===0?'Cover':startPage;
+    const endLabel=story.pages>1?startPage+story.pages-1:'';
+    gpages.textContent=story.pages+'p · pp.'+(endLabel?startLabel+' – '+endLabel:startLabel);
+    header.appendChild(handle);header.appendChild(gtitle);header.appendChild(gpages);
+    group.appendChild(header);
+
+    const spreads=[];
+    for(let i=0;i<story.pages;i+=2){
+      spreads.push({lp:startPage+i,rp:(i+1<story.pages)?startPage+i+1:null,isFirst:i===0});
+    }
+
+    for(let row=0;row<spreads.length;row+=SPREADS_PER_ROW){
+      const rowDiv=document.createElement('div');
+      rowDiv.className='spreads-row';
+      const chunk=spreads.slice(row,row+SPREADS_PER_ROW);
+      chunk.forEach(sp=>{
+        const wrap=document.createElement('div');wrap.className='spread-wrap';
+        const lbl=document.createElement('div');lbl.className='spread-label';
+        lbl.textContent=sp.lp===0?'Cover spread':'pp.'+sp.lp+(sp.rp!=null?' – '+sp.rp:'');
+        wrap.appendChild(lbl);
+        const spreadDiv=document.createElement('div');spreadDiv.className='spread';
+        spreadDiv.appendChild(makePageCell(sp.lp===0?'Cover':sp.lp,true,story,sp.isFirst));
+        const spine=document.createElement('div');spine.className='spine';spreadDiv.appendChild(spine);
+        if(sp.rp!=null){
+          spreadDiv.appendChild(makePageCell(sp.rp,false,story,false));
+        } else {
+          const blank=document.createElement('div');blank.className='page-cell right-page';
+          blank.style.background='var(--bg-secondary)';spreadDiv.appendChild(blank);
+        }
+        wrap.appendChild(spreadDiv);rowDiv.appendChild(wrap);
+      });
+      for(let r=chunk.length;r<SPREADS_PER_ROW;r++){
+        const ph=document.createElement('div');ph.style.flex='1';rowDiv.appendChild(ph);
+      }
+      group.appendChild(rowDiv);
+    }
+
+    group.addEventListener('dragstart',e=>{
+      dragSrcId=id;e.dataTransfer.effectAllowed='move';
+      setTimeout(()=>group.classList.add('dragging'),0);
+    });
+    group.addEventListener('dragend',()=>{
+      group.classList.remove('dragging');
+      document.querySelectorAll('.story-group').forEach(g=>g.classList.remove('drag-over-above','drag-over-below'));
+      dragSrcId=null;
+    });
+    group.addEventListener('dragover',e=>{
+      e.preventDefault();
+      if(!dragSrcId||dragSrcId===id)return;
+      const rect=group.getBoundingClientRect();
+      document.querySelectorAll('.story-group').forEach(g=>g.classList.remove('drag-over-above','drag-over-below'));
+      group.classList.add(e.clientY<rect.top+rect.height/2?'drag-over-above':'drag-over-below');
+    });
+    group.addEventListener('dragleave',e=>{
+      if(!group.contains(e.relatedTarget))group.classList.remove('drag-over-above','drag-over-below');
+    });
+    group.addEventListener('drop',e=>{
+      e.preventDefault();
+      if(!dragSrcId||dragSrcId===id)return;
+      const rect=group.getBoundingClientRect();
+      const insertBefore=e.clientY<rect.top+rect.height/2;
+      const srcIdx=storyOrder.indexOf(dragSrcId);
+      storyOrder.splice(srcIdx,1);
+      const newTgt=storyOrder.indexOf(id);
+      storyOrder.splice(insertBefore?newTgt:newTgt+1,0,dragSrcId);
+      renderEntries();renderGrid();
+    });
+
+    grid.appendChild(group);
+  });
+
+  const totalUsed=storyOrder.reduce((a,id)=>{const s=stories.find(x=>x.id===id);return a+(s?s.pages:0);},0);
+  const remaining=totalPages-totalUsed;
+  document.getElementById('status').textContent=
+    storyOrder.length+' stories · '+totalUsed+'pp used · '+(remaining>=0?remaining+'pp open':Math.abs(remaining)+'pp over');
+}
+
+document.getElementById('import-manual-btn').addEventListener('click',addManualStories);
+document.getElementById('apply-btn').addEventListener('click',buildLayout);
+document.getElementById('rebuild-btn').addEventListener('click',buildLayout);
+document.getElementById('export-pdf-btn').addEventListener('click',()=>window.print());
+document.getElementById('export-txt-btn').addEventListener('click',()=>{
+  const pageStarts=computePageStarts();
+  const lines=['LAYOUT PLAN','============'];
+  storyOrder.forEach(id=>{
+    const s=stories.find(x=>x.id===id);if(!s)return;
+    const sp=pageStarts[id]||0;
+    for(let i=0;i<s.pages;i+=2){
+      const lp=sp+i,rp=i+1<s.pages?sp+i+1:null;
+      const lpStr=String(lp===0?'Cover':lp).padStart(3);
+      const rpStr=rp!=null?String(rp).padStart(3):'   ';
+      lines.push('pp.'+lpStr+' | '+rpStr+'   '+(i===0?s.title:'— cont.'));
+    }
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='layout_plan.txt';a.click();
+});
+
+document.getElementById('tab-manual-btn').addEventListener('click',()=>{
+  document.getElementById('tab-manual').style.display='flex';document.getElementById('tab-csv').style.display='none';
+  document.getElementById('tab-manual-btn').classList.add('active');document.getElementById('tab-csv-btn').classList.remove('active');
+});
+document.getElementById('tab-csv-btn').addEventListener('click',()=>{
+  document.getElementById('tab-csv').style.display='flex';document.getElementById('tab-manual').style.display='none';
+  document.getElementById('tab-csv-btn').classList.add('active');document.getElementById('tab-manual-btn').classList.remove('active');
+});
+
+const dropZone=document.getElementById('drop-zone');
+const fileInput=document.getElementById('csv-file-input');
+dropZone.addEventListener('click',()=>fileInput.click());
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.classList.add('over');});
+dropZone.addEventListener('dragleave',()=>dropZone.classList.remove('over'));
+dropZone.addEventListener('drop',e=>{
+  e.preventDefault();dropZone.classList.remove('over');
+  if(e.dataTransfer.files[0])readFile(e.dataTransfer.files[0]);
+});
+fileInput.addEventListener('change',()=>{if(fileInput.files[0])readFile(fileInput.files[0]);});
+function readFile(file){const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(file);}
+</script>
+</body>
+</html>
+ust: exact; print-color-adjust: exact; }
   h1-bar { display: none !important; }
 }
 
