@@ -6,40 +6,28 @@
 <title>Magazine Layout Planner</title>
 <style>
 @media print {
-  #instructions,#left,#right-top,#legend{display:none!important;}
+  @page{size:8.5in 11in;margin:0.4in;}
+  #left,#right-top,#legend-bar{display:none!important;}
   #wrap{display:block!important;}
   #right{overflow:visible!important;background:white!important;padding:0!important;}
-  body{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
-  .spread-wrap{break-inside:avoid;}
-  .drag-handle{display:none!important;}
+  body{-webkit-print-color-adjust:exact;print-color-adjust:exact;overflow:visible!important;height:auto!important;}
+  html{overflow:visible!important;height:auto!important;}
+  .spread-row{break-inside:avoid;}
+  .drag-handle,.grid-handle{display:none!important;}
 }
 
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-
 :root{
-  --bg-primary:#ffffff;
-  --bg-secondary:#f5f4f0;
-  --bg-tertiary:#efede8;
-  --text-primary:#1a1a18;
-  --text-secondary:#6b6a65;
-  --text-tertiary:#9e9d98;
-  --border-light:rgba(0,0,0,0.09);
-  --border-mid:rgba(0,0,0,0.16);
-  --radius-sm:5px;
-  --radius-md:8px;
-  --accent:#378ADD;
+  --bg-primary:#ffffff;--bg-secondary:#f5f4f0;--bg-tertiary:#efede8;
+  --text-primary:#1a1a18;--text-secondary:#6b6a65;--text-tertiary:#9e9d98;
+  --border-light:rgba(0,0,0,0.09);--border-mid:rgba(0,0,0,0.16);
+  --radius-sm:5px;--radius-md:8px;--accent:#378ADD;
 }
-
 @media(prefers-color-scheme:dark){
   :root{
-    --bg-primary:#1e1e1c;
-    --bg-secondary:#272724;
-    --bg-tertiary:#2e2e2b;
-    --text-primary:#e8e6e0;
-    --text-secondary:#9e9d98;
-    --text-tertiary:#6b6a65;
-    --border-light:rgba(255,255,255,0.07);
-    --border-mid:rgba(255,255,255,0.13);
+    --bg-primary:#1e1e1c;--bg-secondary:#272724;--bg-tertiary:#2e2e2b;
+    --text-primary:#e8e6e0;--text-secondary:#9e9d98;--text-tertiary:#6b6a65;
+    --border-light:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.13);
   }
 }
 
@@ -50,91 +38,88 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #h1-bar h1{font-size:14px;font-weight:600;color:var(--text-primary);}
 #h1-bar .subtitle{font-size:11px;color:var(--text-tertiary);}
 
-#page{display:flex;flex-direction:column;flex:1;overflow:hidden;}
+#page{display:flex;flex:1;overflow:hidden;}
 
-#instructions{background:var(--bg-secondary);border-bottom:0.5px solid var(--border-light);padding:10px 18px;flex-shrink:0;}
-#instructions-hdr{display:flex;align-items:center;justify-content:space-between;}
-#instructions-hdr h3{font-size:11px;font-weight:600;color:var(--text-primary);}
-#instr-toggle{font-size:10px;color:var(--text-tertiary);cursor:pointer;background:none;border:none;font-family:inherit;text-decoration:underline;text-underline-offset:2px;}
-#instr-body{margin-top:7px;}
-#instr-body ol{font-size:11px;color:var(--text-secondary);line-height:1.65;padding-left:15px;display:flex;flex-direction:column;gap:2px;}
-#instr-tip{margin-top:6px;padding:5px 9px;background:var(--bg-primary);border-left:2px solid var(--border-mid);font-size:10px;color:var(--text-secondary);border-radius:0 var(--radius-sm) var(--radius-sm) 0;}
-
-#wrap{display:flex;flex:1;overflow:hidden;}
-
-#left{width:310px;flex-shrink:0;border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;background:var(--bg-primary);}
+#left{width:290px;flex-shrink:0;border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;background:var(--bg-primary);}
 #left-top{padding:12px;border-bottom:0.5px solid var(--border-light);flex-shrink:0;}
-#left-top h2{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:8px;}
+#left-top h2{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:10px;}
 
-#tab-bar{display:flex;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);overflow:hidden;margin-bottom:9px;}
-.tab-btn{flex:1;font-size:11px;padding:5px 4px;cursor:pointer;background:transparent;border:none;color:var(--text-secondary);font-family:inherit;}
-.tab-btn.active{background:var(--bg-secondary);color:var(--text-primary);font-weight:600;}
+#add-form{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+#add-title{width:100%;font-size:11px;padding:5px 8px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);font-family:inherit;}
+#add-title::placeholder{color:var(--text-tertiary);}
+#add-row{display:flex;gap:5px;}
+#add-type,#add-pages{font-size:11px;padding:4px 5px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);font-family:inherit;}
+#add-type{flex:1;}#add-pages{width:54px;}
+#add-btn{font-size:11px;padding:4px 10px;cursor:pointer;border-radius:var(--radius-md);border:0.5px solid var(--border-mid);background:var(--bg-primary);color:var(--text-primary);white-space:nowrap;font-family:inherit;}
+#add-btn:hover{background:var(--bg-secondary);}
 
-#tab-manual{display:flex;flex-direction:column;gap:6px;}
-#tab-csv{display:none;flex-direction:column;gap:7px;}
-
-textarea{width:100%;min-height:75px;font-size:11px;padding:6px 8px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);resize:vertical;font-family:inherit;line-height:1.5;}
-textarea::placeholder{color:var(--text-tertiary);}
-
-button{font-family:inherit;font-size:11px;cursor:pointer;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);padding:5px 11px;transition:background 0.1s;}
-button:hover{background:var(--bg-secondary);}
-button:active{transform:scale(0.98);}
-#import-manual-btn{width:100%;}
-#apply-btn{margin:10px;width:calc(100% - 20px);font-size:12px;font-weight:600;padding:7px;}
-
-#csv-browse-btn{width:100%;padding:10px;font-size:11px;cursor:pointer;border-radius:var(--radius-md);border:1px dashed var(--border-mid);background:var(--bg-secondary);color:var(--text-secondary);text-align:center;}
-#csv-browse-btn:hover{background:var(--bg-tertiary);color:var(--text-primary);}
+#csv-row{display:flex;gap:5px;align-items:center;padding-top:6px;border-top:0.5px solid var(--border-light);}
+#csv-browse-btn{flex:1;font-size:11px;padding:5px 8px;cursor:pointer;border-radius:var(--radius-md);border:0.5px dashed var(--border-mid);background:var(--bg-secondary);color:var(--text-secondary);text-align:center;font-family:inherit;}
+#csv-browse-btn:hover{background:var(--bg-tertiary);}
 #csv-file-input{display:none;}
-#csv-status{font-size:11px;color:var(--text-secondary);min-height:16px;}
-#csv-note{font-size:10px;color:var(--text-tertiary);line-height:1.55;}
+#csv-status{font-size:10px;color:var(--text-tertiary);}
 
 #story-entries{flex:1;overflow-y:auto;padding:8px;}
-.entry-row{display:flex;align-items:center;gap:4px;padding:4px 5px;margin-bottom:3px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);background:var(--bg-primary);}
-.entry-num{font-size:10px;color:var(--text-tertiary);min-width:15px;text-align:right;flex-shrink:0;}
+.entry-row{display:flex;align-items:center;gap:4px;padding:4px 5px;margin-bottom:3px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);background:var(--bg-primary);transition:opacity 0.1s,border-color 0.1s;}
+.entry-row.dragging{opacity:0.2;}
+.entry-row.drop-above{border-top:2px solid var(--accent);}
+.entry-row.drop-below{border-bottom:2px solid var(--accent);}
+.drag-handle{font-size:13px;color:var(--text-tertiary);cursor:grab;flex-shrink:0;padding:0 2px;line-height:1;touch-action:none;}
+.drag-handle:hover{color:var(--text-secondary);}
+.drag-handle:active{cursor:grabbing;}
+.entry-num{font-size:10px;color:var(--text-tertiary);min-width:14px;text-align:right;flex-shrink:0;}
 .entry-title{flex:1;font-size:11px;color:var(--text-primary);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;}
-.entry-select{font-size:10px;padding:2px;border-radius:3px;border:0.5px solid var(--border-mid);background:var(--bg-secondary);color:var(--text-primary);cursor:pointer;flex-shrink:0;font-family:inherit;}
+.entry-badge{font-size:10px;padding:1px 5px;border-radius:3px;flex-shrink:0;}
+.entry-pages{font-size:10px;color:var(--text-tertiary);flex-shrink:0;}
 .entry-del{font-size:10px;color:var(--text-tertiary);cursor:pointer;flex-shrink:0;padding:0 2px;border:none;background:none;font-family:inherit;}
 .entry-del:hover{color:#A32D2D;}
+#apply-btn{margin:8px;font-size:12px;padding:7px;cursor:pointer;border-radius:var(--radius-md);font-weight:600;border:0.5px solid var(--border-mid);background:var(--bg-primary);color:var(--text-primary);font-family:inherit;width:calc(100% - 16px);}
+#apply-btn:hover{background:var(--bg-secondary);}
 
 #right{flex:1;overflow:auto;background:var(--bg-tertiary);padding:14px;display:flex;flex-direction:column;}
 #right-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0;}
 #right-top label{font-size:11px;color:var(--text-secondary);}
-#pg-input{width:56px;font-size:11px;padding:4px 6px;}
+#pg-input{width:52px;font-size:11px;padding:4px 5px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);}
+.top-btn{font-size:11px;padding:4px 9px;cursor:pointer;border-radius:var(--radius-md);border:0.5px solid var(--border-mid);background:var(--bg-primary);color:var(--text-primary);font-family:inherit;}
+.top-btn:hover{background:var(--bg-secondary);}
 #status{font-size:11px;color:var(--text-secondary);margin-left:auto;}
 
-#legend{display:flex;gap:9px;flex-wrap:wrap;margin-bottom:12px;flex-shrink:0;}
+#legend-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center;flex-shrink:0;}
 .leg{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--text-secondary);}
 .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.leg-hint{font-size:10px;color:var(--text-tertiary);margin-left:6px;padding-left:8px;border-left:0.5px solid var(--border-light);}
 
-#grid{display:flex;flex-direction:column;gap:14px;overflow-y:auto;flex:1;}
+/* Continuous lightbox grid */
+#grid{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;align-content:flex-start;flex:1;}
 
-.section-label{font-size:10px;font-weight:600;color:var(--text-tertiary);letter-spacing:0.06em;text-transform:uppercase;padding-bottom:4px;border-bottom:0.5px solid var(--border-light);margin-bottom:4px;}
+.story-block{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;position:relative;padding:4px;border-radius:8px;border:2px solid transparent;transition:border-color 0.1s,background 0.1s,opacity 0.1s;}
+.story-block.dragging{opacity:0.2;}
+.story-block.drop-before{border-left-color:var(--accent);background:rgba(55,138,221,0.04);}
+.story-block.drop-after{border-right-color:var(--accent);background:rgba(55,138,221,0.04);}
 
-.grid-row{display:flex;gap:8px;align-items:flex-start;}
-.spread-wrap{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
-.spread-label{font-size:9px;color:var(--text-tertiary);letter-spacing:0.03em;}
-.spread{display:flex;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);overflow:hidden;background:var(--bg-primary);}
-.spread.cover-spread{border-color:#B4B2A9;}
-.page-cell{flex:1;min-height:110px;display:flex;flex-direction:column;}
+.block-handle-row{position:absolute;top:4px;left:8px;display:flex;align-items:center;gap:4px;pointer-events:none;z-index:2;}
+.grid-handle{font-size:12px;color:var(--text-tertiary);cursor:grab;padding:1px 3px;border-radius:3px;line-height:1;touch-action:none;pointer-events:all;background:var(--bg-primary);border:0.5px solid var(--border-light);opacity:0.85;}
+.grid-handle:hover{opacity:1;color:var(--text-secondary);}
+.grid-handle:active{cursor:grabbing;}
+
+.spread-wrap{flex:0 0 auto;display:flex;flex-direction:column;gap:2px;}
+.spread-label{font-size:9px;color:var(--text-tertiary);letter-spacing:0.03em;white-space:nowrap;}
+.spread{display:flex;border:0.5px solid var(--border-mid);border-radius:6px;overflow:hidden;background:var(--bg-primary);}
+.spread.is-cover{border-color:#888780;}
+
+.page-cell{flex:0 0 72px;min-height:100px;display:flex;flex-direction:column;}
 .page-cell.left-page{border-right:2px solid var(--border-mid);}
-.page-cell.cover-cell{background:var(--bg-secondary);}
-.pg-num{font-size:9px;color:var(--text-tertiary);padding:3px 5px 1px;line-height:1;flex-shrink:0;}
-.pg-num.right-num{text-align:right;}
-.pg-content{flex:1;padding:2px 5px 5px;display:flex;flex-direction:column;gap:3px;}
-.story-chip{border-radius:3px;padding:3px 5px;font-size:10px;font-weight:500;line-height:1.3;word-break:break-word;}
-.story-chip.cont{opacity:0.45;font-style:italic;font-weight:400;}
-.spine{width:5px;flex-shrink:0;background:var(--border-light);}
-.spine.cover-spine{background:#B4B2A9;opacity:1;}
+.page-cell.fixed-cover{background:#E8E6DF;}
 
-#grid{user-select:none;}
-.story-group-handle-row{display:flex;align-items:center;gap:4px;margin-bottom:2px;}
-.drag-handle{font-size:12px;color:var(--text-tertiary);cursor:grab;padding:1px 3px;border-radius:3px;line-height:1;}
-.drag-handle:hover{background:var(--bg-secondary);}
-.drag-handle:active{cursor:grabbing;}
-.interior-group{border-radius:var(--radius-md);border:1.5px solid transparent;padding:4px;transition:border-color 0.12s,background 0.12s;}
-.interior-group.drag-active{opacity:0.25;}
-.interior-group.drop-above{border-top-color:var(--accent);background:var(--bg-secondary);}
-.interior-group.drop-below{border-bottom-color:var(--accent);background:var(--bg-secondary);}
+.pg-num{font-size:9px;color:var(--text-tertiary);padding:3px 4px 1px;line-height:1;flex-shrink:0;}
+.pg-num.right-num{text-align:right;}
+.pg-num.cover-num{color:#5F5E5A;font-weight:500;}
+.pg-content{flex:1;padding:2px 4px 4px;display:flex;flex-direction:column;gap:2px;}
+.story-chip{border-radius:3px;padding:3px 4px;font-size:10px;font-weight:500;line-height:1.3;word-break:break-word;}
+.story-chip.cont{opacity:0.45;font-style:italic;font-weight:400;}
+.fixed-label{font-size:10px;font-weight:500;color:#5F5E5A;font-style:italic;padding:2px 0;}
+.spine{width:4px;flex-shrink:0;background:var(--border-light);}
+.spine.cover-spine{background:#888780;opacity:0.8;}
 </style>
 </head>
 <body>
@@ -145,365 +130,311 @@ button:active{transform:scale(0.98);}
 </div>
 
 <div id="page">
-<div id="instructions">
-  <div id="instructions-hdr">
-    <h3>How to use this layout planner</h3>
-    <button id="instr-toggle" onclick="toggleInstr()">Hide</button>
+<div id="left">
+  <div id="left-top">
+    <h2>Story list</h2>
+    <div id="add-form">
+      <input type="text" id="add-title" placeholder="Story title...">
+      <div id="add-row">
+        <select id="add-type">
+          <option value="boilerplate">Boilerplate</option>
+          <option value="feature">Feature</option>
+          <option value="coverstory">Cover story</option>
+          <option value="ad">Ad</option>
+        </select>
+        <select id="add-pages">
+          <option value="1">1p</option><option value="2" selected>2p</option>
+          <option value="3">3p</option><option value="4">4p</option>
+          <option value="5">5p</option><option value="6">6p</option>
+          <option value="7">7p</option><option value="8">8p</option>
+          <option value="9">9p</option><option value="10">10p</option>
+          <option value="12">12p</option><option value="16">16p</option>
+          <option value="24">24p</option>
+        </select>
+        <button id="add-btn">+ Add</button>
+      </div>
+    </div>
+    <div id="csv-row">
+      <button id="csv-browse-btn">Import CSV</button>
+      <input type="file" id="csv-file-input" accept=".csv">
+      <span id="csv-status"></span>
+    </div>
   </div>
-  <div id="instr-body">
-    <ol>
-      <li><strong>Add stories</strong> — paste titles one per line in Manual entry and click Add stories, or switch to Import CSV and click to browse for your Google Sheets export.</li>
-      <li><strong>Set type &amp; pages</strong> — each story gets two dropdowns: type (Feature, Boilerplate, etc.) and page count. Stories tagged as Front cover, Back cover, IFC, or IBC are automatically pulled into the cover spreads at the top.</li>
-      <li><strong>Build layout</strong> — the top two spreads show your four covers. Interior pages flow continuously below as a light table, 1–2 side by side, then 3–4, and so on.</li>
-      <li><strong>Drag to reorder</strong> — grab the ⠿ handle on any interior story and drag it up or down. All its pages move together and page numbers update automatically.</li>
-      <li><strong>Export</strong> — Export PDF opens your browser's print dialog; choose Save as PDF. Export text downloads a plain-text runsheet.</li>
-    </ol>
-    <div id="instr-tip">Color code: blue = Feature · green = Boilerplate · orange = Ad · red = Front/Cover story · purple = IFC/IBC · gray = Back cover. The counter in the toolbar shows pages used vs. remaining.</div>
-  </div>
+  <div id="story-entries"></div>
+  <button id="apply-btn">Build layout</button>
 </div>
 
-<div id="wrap">
-  <div id="left">
-    <div id="left-top">
-      <h2>Story list</h2>
-      <div id="tab-bar">
-        <button class="tab-btn active" id="tab-manual-btn">Manual entry</button>
-        <button class="tab-btn" id="tab-csv-btn">Import CSV</button>
-      </div>
-      <div id="tab-manual">
-        <textarea id="paste-area" placeholder="Paste story titles here, one per line."></textarea>
-        <button id="import-manual-btn">Add stories</button>
-      </div>
-      <div id="tab-csv">
-        <button id="csv-browse-btn">Click to select your CSV file</button>
-        <input type="file" id="csv-file-input" accept=".csv">
-        <div id="csv-status"></div>
-        <div id="csv-note">Reads columns: Article, Section, Pg Ct. Rows with a blank Article are skipped. Page counts of 0 or 0.5 become 1.</div>
-      </div>
-    </div>
-    <div id="story-entries"></div>
-    <button id="apply-btn">Build layout</button>
+<div id="right">
+  <div id="right-top">
+    <label>Total pages:</label>
+    <input type="number" id="pg-input" value="104" min="4" max="300" step="2">
+    <button class="top-btn" id="rebuild-btn">Update</button>
+    <button class="top-btn" id="export-pdf-btn">Export PDF (8.5×11)</button>
+    <button class="top-btn" id="export-txt-btn">Export text</button>
+    <span id="status"></span>
   </div>
-
-  <div id="right">
-    <div id="right-top">
-      <label>Total pages:</label>
-      <input type="number" id="pg-input" value="104" min="4" max="300" step="2">
-      <button id="rebuild-btn">Update</button>
-      <button id="export-pdf-btn">Export PDF</button>
-      <button id="export-txt-btn">Export text</button>
-      <span id="status"></span>
-    </div>
-    <div id="legend">
-      <div class="leg"><div class="leg-dot" style="background:#C8241A;"></div>Front cover</div>
-      <div class="leg"><div class="leg-dot" style="background:#D85A30;"></div>Cover story</div>
-      <div class="leg"><div class="leg-dot" style="background:#378ADD;"></div>Feature</div>
-      <div class="leg"><div class="leg-dot" style="background:#639922;"></div>Boilerplate</div>
-      <div class="leg"><div class="leg-dot" style="background:#BA7517;"></div>Ad</div>
-      <div class="leg"><div class="leg-dot" style="background:#7F77DD;"></div>IFC</div>
-      <div class="leg"><div class="leg-dot" style="background:#534AB7;"></div>IBC</div>
-      <div class="leg"><div class="leg-dot" style="background:#444441;"></div>Back cover</div>
-    </div>
-    <div id="grid"></div>
+  <div id="legend-bar">
+    <div class="leg"><div class="leg-dot" style="background:#888780;"></div>Fixed covers</div>
+    <div class="leg"><div class="leg-dot" style="background:#D85A30;"></div>Cover story</div>
+    <div class="leg"><div class="leg-dot" style="background:#378ADD;"></div>Feature</div>
+    <div class="leg"><div class="leg-dot" style="background:#639922;"></div>Boilerplate</div>
+    <div class="leg"><div class="leg-dot" style="background:#BA7517;"></div>Ad</div>
+    <span class="leg-hint">Drag ⠿ in either panel to reorder</span>
   </div>
+  <div id="grid"></div>
 </div>
 </div>
 
 <script>
-let stories=[];
-let storyOrder=[];
-let totalPages=104;
-let idSeq=0;
-let instrVisible=true;
-let dragId=null,dragEl=null,ghostEl=null,offsetX=0,offsetY=0;
+let stories=[],storyOrder=[],totalPages=104,idSeq=0;
+let dragId=null,dragEl=null,ghostEl=null,ptrOffX=0,ptrOffY=0,dragMode=null;
 
-const COVER_TYPES=new Set(['frontcover','backcover','ifc','ibc']);
+const TYPE_MAP={
+  coverstory:{bg:'#FAECE7',color:'#712B13',label:'Cover story'},
+  feature:{bg:'#E6F1FB',color:'#0C447C',label:'Feature'},
+  boilerplate:{bg:'#EAF3DE',color:'#27500A',label:'Boilerplate'},
+  ad:{bg:'#FAEEDA',color:'#633806',label:'Ad'},
+};
+function chipStyle(t){const x=TYPE_MAP[t]||TYPE_MAP.boilerplate;return`background:${x.bg};color:${x.color};`;}
 
-function toggleInstr(){
-  instrVisible=!instrVisible;
-  document.getElementById('instr-body').style.display=instrVisible?'block':'none';
-  document.getElementById('instr-toggle').textContent=instrVisible?'Hide':'Show';
+function isCoverRowCSV(s,ti){
+  s=(s||'').toLowerCase().trim();ti=(ti||'').toLowerCase().trim();
+  if(['inside cover','outside back cover','ifc','ibc','inside back cover','inside front cover'].includes(s))return true;
+  if(['front cover','back cover','inside front cover','inside back cover','remittance envelope'].includes(ti))return true;
+  if(s.includes('outside back')||ti.includes('back cover/alumni')||ti.includes('inside cover (2-page'))return true;
+  return false;
+}
+function guessType(s,ti){
+  s=(s||'').toLowerCase();ti=(ti||'').toLowerCase();
+  if(s.includes('feature'))return'feature';
+  if(s.includes('cover story')||ti.includes('cover story'))return'coverstory';
+  if(s.includes('ad')||ti.includes('blair fund ad'))return'ad';
+  return'boilerplate';
 }
 
-const TYPES=[
-  {v:'frontcover', l:'Front cover',       bg:'#FDECEA',color:'#7D0E08'},
-  {v:'coverstory', l:'Cover story',        bg:'#FAECE7',color:'#712B13'},
-  {v:'feature',    l:'Feature',            bg:'#E6F1FB',color:'#0C447C'},
-  {v:'boilerplate',l:'Boilerplate',        bg:'#EAF3DE',color:'#27500A'},
-  {v:'ad',         l:'Ad',                 bg:'#FAEEDA',color:'#633806'},
-  {v:'ifc',        l:'Inside front cover', bg:'#EEEDFE',color:'#3C3489'},
-  {v:'ibc',        l:'Inside back cover',  bg:'#D9D6F8',color:'#26215C'},
-  {v:'backcover',  l:'Back cover',         bg:'#D3D1C7',color:'#2C2C2A'},
-];
-const TYPE_MAP={};
-TYPES.forEach(t=>TYPE_MAP[t.v]=t);
-
-function guessType(section,title){
-  const s=(section||'').toLowerCase(),ti=(title||'').toLowerCase();
-  if(s.includes('outside back')||ti.includes('back cover')) return 'backcover';
-  if(s.includes('inside back')||s.includes('ibc')) return 'ibc';
-  if(s.includes('inside cover')||s.includes('ifc')||s.includes('inside front')) return 'ifc';
-  if(s.includes('feature')) return 'feature';
-  if(s.includes('cover story')||ti.includes('cover story')) return 'coverstory';
-  if(s.includes('ad')||ti.includes('blair fund ad')) return 'ad';
-  return 'boilerplate';
+/* ── unified drag engine ── */
+function getSidebarTargets(){return[...document.querySelectorAll('.entry-row[data-id]')];}
+function getGridTargets(){return[...document.querySelectorAll('.story-block[data-id]')];}
+function clearHL(){
+  getSidebarTargets().forEach(el=>el.classList.remove('drop-above','drop-below'));
+  getGridTargets().forEach(el=>el.classList.remove('drop-before','drop-after'));
+}
+function sidebarTargetAtY(y){return getSidebarTargets().find(el=>{const r=el.getBoundingClientRect();return y>=r.top&&y<=r.bottom;})||null;}
+function gridTargetAtX(x){
+  for(const b of getGridTargets()){
+    const r=b.getBoundingClientRect();
+    if(x>=r.left&&x<=r.right)return{el:b,before:x<r.left+r.width/2};
+  }
+  return null;
+}
+function onPtrMove(e){
+  if(!dragEl)return;e.preventDefault();
+  ghostEl.style.left=(e.clientX-ptrOffX)+'px';
+  ghostEl.style.top=(e.clientY-ptrOffY)+'px';
+  clearHL();
+  if(dragMode==='sidebar'){
+    const t=sidebarTargetAtY(e.clientY);
+    if(t&&t.dataset.id!==dragId){const r=t.getBoundingClientRect();t.classList.add(e.clientY<r.top+r.height/2?'drop-above':'drop-below');}
+  } else {
+    const hit=gridTargetAtX(e.clientX);
+    if(hit&&hit.el.dataset.id!==dragId)hit.el.classList.add(hit.before?'drop-before':'drop-after');
+  }
+}
+function onPtrUp(e){
+  if(!dragEl)return;
+  document.removeEventListener('pointermove',onPtrMove);
+  document.removeEventListener('pointerup',onPtrUp);
+  if(ghostEl){ghostEl.remove();ghostEl=null;}
+  dragEl.classList.remove('dragging');clearHL();
+  if(dragMode==='sidebar'){
+    const t=sidebarTargetAtY(e.clientY);
+    if(t&&t.dataset.id!==dragId){const r=t.getBoundingClientRect();doReorder(dragId,t.dataset.id,e.clientY<r.top+r.height/2);}
+  } else {
+    const hit=gridTargetAtX(e.clientX);
+    if(hit&&hit.el.dataset.id!==dragId)doReorder(dragId,hit.el.dataset.id,hit.before);
+  }
+  dragEl=null;dragId=null;dragMode=null;
+}
+function doReorder(fromId,toId,before){
+  const si=storyOrder.indexOf(fromId);storyOrder.splice(si,1);
+  const ti=storyOrder.indexOf(toId);storyOrder.splice(before?ti:ti+1,0,fromId);
+  renderEntries();renderGrid();
+}
+function startDrag(e,id,el,mode,title,pages){
+  e.preventDefault();e.stopPropagation();
+  dragId=id;dragEl=el;dragMode=mode;
+  const rect=el.getBoundingClientRect();ptrOffX=e.clientX-rect.left;ptrOffY=e.clientY-rect.top;
+  ghostEl=document.createElement('div');
+  ghostEl.style.cssText=`position:fixed;pointer-events:none;z-index:9999;min-width:140px;max-width:260px;opacity:0.93;left:${e.clientX-ptrOffX}px;top:${e.clientY-ptrOffY}px;background:var(--bg-primary);border-radius:6px;border:1.5px solid #378ADD;padding:5px 10px;font-size:11px;font-weight:500;color:var(--text-secondary);box-shadow:0 4px 16px rgba(0,0,0,0.15);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;`;
+  ghostEl.textContent=title+' ('+pages+'p)';
+  document.body.appendChild(ghostEl);
+  el.classList.add('dragging');
+  document.addEventListener('pointermove',onPtrMove,{passive:false});
+  document.addEventListener('pointerup',onPtrUp);
 }
 
-function chipStyle(type){
-  const t=TYPE_MAP[type]||TYPE_MAP['boilerplate'];
-  return `background:${t.bg};color:${t.color};`;
-}
-
+/* ── sidebar ── */
 function makeEntryRow(story,index){
-  const row=document.createElement('div');row.className='entry-row';
-  const num=document.createElement('div');num.className='entry-num';num.textContent=(index+1)+'';
-  const title=document.createElement('div');title.className='entry-title';title.textContent=story.title;title.title=story.title;
-  const tsel=document.createElement('select');tsel.className='entry-select';tsel.style.width='110px';
-  TYPES.forEach(o=>{const opt=document.createElement('option');opt.value=o.v;opt.textContent=o.l;if(o.v===story.type)opt.selected=true;tsel.appendChild(opt);});
-  tsel.addEventListener('change',()=>{story.type=tsel.value;});
-  const psel=document.createElement('select');psel.className='entry-select';psel.style.width='40px';
-  [1,2,3,4,5,6,7,8,9,10,12,16,24].forEach(n=>{const opt=document.createElement('option');opt.value=n;opt.textContent=n+'p';if(n===story.pages)opt.selected=true;psel.appendChild(opt);});
-  psel.addEventListener('change',()=>{story.pages=parseInt(psel.value);});
-  const del=document.createElement('button');del.className='entry-del';del.textContent='✕';del.title='Remove';
-  del.addEventListener('click',()=>{stories=stories.filter(s=>s.id!==story.id);storyOrder=storyOrder.filter(id=>id!==story.id);renderEntries();});
-  row.appendChild(num);row.appendChild(title);row.appendChild(tsel);row.appendChild(psel);row.appendChild(del);
+  const row=document.createElement('div');row.className='entry-row';row.dataset.id=story.id;
+  const h=document.createElement('span');h.className='drag-handle';h.textContent='⠿';h.title='Drag to reorder';h.style.touchAction='none';
+  h.addEventListener('pointerdown',e=>startDrag(e,story.id,row,'sidebar',story.title,story.pages));
+  const num=document.createElement('div');num.className='entry-num';num.textContent=index+1+'';
+  const t=document.createElement('div');t.className='entry-title';t.textContent=story.title;t.title=story.title;
+  const badge=document.createElement('span');badge.className='entry-badge';badge.style.cssText=chipStyle(story.type);badge.textContent=(TYPE_MAP[story.type]||TYPE_MAP.boilerplate).label;
+  const pg=document.createElement('span');pg.className='entry-pages';pg.textContent=story.pages+'p';
+  const del=document.createElement('button');del.className='entry-del';del.textContent='✕';
+  del.onclick=()=>{stories=stories.filter(s=>s.id!==story.id);storyOrder=storyOrder.filter(id=>id!==story.id);renderEntries();renderGrid();};
+  row.appendChild(h);row.appendChild(num);row.appendChild(t);row.appendChild(badge);row.appendChild(pg);row.appendChild(del);
   return row;
 }
-
 function renderEntries(){
-  const el=document.getElementById('story-entries');
-  el.innerHTML='';
-  if(!storyOrder.length){el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);padding:10px 6px;">Add stories using either tab above.</div>';return;}
+  const el=document.getElementById('story-entries');el.innerHTML='';
+  if(!storyOrder.length){el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);padding:10px 6px;">Add a story above or import a CSV. Drag ⠿ in either panel to reorder.</div>';return;}
   storyOrder.forEach((id,i)=>{const s=stories.find(x=>x.id===id);if(s)el.appendChild(makeEntryRow(s,i));});
 }
-
-function addManualStories(){
-  const raw=document.getElementById('paste-area').value.trim();
-  if(!raw)return;
-  raw.split('\n').forEach(line=>{line=line.trim();if(!line)return;const s={id:'s'+(++idSeq),title:line,type:'boilerplate',pages:2};stories.push(s);storyOrder.push(s.id);});
-  document.getElementById('paste-area').value='';renderEntries();
+function addStory(){
+  const title=document.getElementById('add-title').value.trim();if(!title)return;
+  const type=document.getElementById('add-type').value;
+  const pages=parseInt(document.getElementById('add-pages').value)||2;
+  const s={id:'s'+(++idSeq),title,type,pages};
+  stories.push(s);storyOrder.push(s.id);
+  document.getElementById('add-title').value='';
+  renderEntries();renderGrid();
 }
 
-function splitCSVLine(line){
-  const cols=[];let cur='',inQ=false;
-  for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){inQ=!inQ;continue;}if(ch===','&&!inQ){cols.push(cur);cur='';continue;}cur+=ch;}
-  cols.push(cur);return cols;
-}
-
+function splitCSV(line){const cols=[];let cur='',inQ=false;for(let i=0;i<line.length;i++){const ch=line[i];if(ch==='"'){inQ=!inQ;continue;}if(ch===','&&!inQ){cols.push(cur);cur='';continue;}cur+=ch;}cols.push(cur);return cols;}
 function parseCSV(text){
-  const lines=text.split(/\r?\n/);
-  let headerRow=-1,colArticle=-1,colSection=-1,colPgCt=-1;
-  for(let i=0;i<Math.min(lines.length,6);i++){
-    const cols=splitCSVLine(lines[i]);
-    const ai=cols.findIndex(c=>/article/i.test(c.trim()));
-    if(ai>=0){headerRow=i;colArticle=ai;colSection=cols.findIndex(c=>/section/i.test(c.trim()));colPgCt=cols.findIndex(c=>/pg.?ct|page.?count|pages/i.test(c.trim()));break;}
-  }
-  if(headerRow<0){alert('Could not find an "Article" column in your CSV.');return;}
-  let count=0;
-  for(let i=headerRow+1;i<lines.length;i++){
-    const cols=splitCSVLine(lines[i]);
-    const title=(colArticle>=0?cols[colArticle]||'':'').trim();
-    if(!title)continue;
-    const section=colSection>=0?(cols[colSection]||'').trim():'';
-    const pgRaw=colPgCt>=0?(cols[colPgCt]||'0').trim():'2';
-    let pages=Math.round(parseFloat(pgRaw)||0);if(pages<1)pages=1;
+  const lines=text.split(/\r?\n/);let hdr=-1,cA=-1,cS=-1,cP=-1;
+  for(let i=0;i<Math.min(lines.length,6);i++){const cols=splitCSV(lines[i]);const ai=cols.findIndex(c=>/article/i.test(c.trim()));if(ai>=0){hdr=i;cA=ai;cS=cols.findIndex(c=>/section/i.test(c.trim()));cP=cols.findIndex(c=>/pg.?ct|pages/i.test(c.trim()));break;}}
+  if(hdr<0){alert('No Article column found.');return;}
+  let count=0,skipped=0;
+  for(let i=hdr+1;i<lines.length;i++){
+    const cols=splitCSV(lines[i]);const title=(cA>=0?cols[cA]||'':'').trim();if(!title)continue;
+    const section=cS>=0?(cols[cS]||'').trim():'';
+    if(isCoverRowCSV(section,title)){skipped++;continue;}
+    let pages=Math.round(parseFloat(cP>=0?(cols[cP]||'0').trim():'0')||0);if(pages<1)pages=1;
     const s={id:'s'+(++idSeq),title,type:guessType(section,title),pages};
     stories.push(s);storyOrder.push(s.id);count++;
   }
-  document.getElementById('csv-status').textContent=count+' stories imported.';
-  renderEntries();buildLayout();
+  document.getElementById('csv-status').textContent=count+' imported'+(skipped?' · '+skipped+' skipped':'');
+  renderEntries();renderGrid();
 }
 
-function getStoriesByType(type){return storyOrder.map(id=>stories.find(x=>x.id===id)).filter(s=>s&&s.type===type);}
-function getInteriorStories(){return storyOrder.map(id=>stories.find(x=>x.id===id)).filter(s=>s&&!COVER_TYPES.has(s.type));}
-function buildInteriorPageMap(interiorStories){
-  const map={};let cursor=1;
-  interiorStories.forEach(s=>{for(let i=0;i<s.pages;i++)map[cursor+i]={story:s,isStart:i===0};cursor+=s.pages;});
-  return{map,lastPage:cursor-1};
+/* ── grid cells ── */
+function makeFixedCell(label,isLeft){
+  const cell=document.createElement('div');cell.className='page-cell fixed-cover'+(isLeft?' left-page':'');
+  const pn=document.createElement('div');pn.className='pg-num cover-num'+(!isLeft?' right-num':'');pn.textContent=label;cell.appendChild(pn);
+  const ct=document.createElement('div');ct.className='pg-content';
+  const lb=document.createElement('div');lb.className='fixed-label';lb.textContent=label;ct.appendChild(lb);
+  cell.appendChild(ct);return cell;
 }
-
-function makeCoverCell(story,fallbackLabel,isLeft){
-  const cell=document.createElement('div');
-  cell.className='page-cell cover-cell '+(isLeft?'left-page':'right-page');
-  const pgNum=document.createElement('div');pgNum.className='pg-num'+(!isLeft?' right-num':'');pgNum.textContent=fallbackLabel;
-  cell.appendChild(pgNum);
-  const content=document.createElement('div');content.className='pg-content';
-  if(story){const chip=document.createElement('div');chip.className='story-chip';chip.style.cssText=chipStyle(story.type);chip.textContent=story.title;content.appendChild(chip);}
-  else{const ph=document.createElement('div');ph.style.cssText='font-size:10px;color:var(--text-tertiary);font-style:italic;padding:2px 0;';ph.textContent='(not assigned)';content.appendChild(ph);}
-  cell.appendChild(content);return cell;
-}
-
-function makeInteriorCell(pageNum,isLeft,pageMap){
+function makePageCell(pg,isLeft,pageMap){
   const cell=document.createElement('div');cell.className='page-cell '+(isLeft?'left-page':'right-page');
-  const pgNum=document.createElement('div');pgNum.className='pg-num'+(!isLeft?' right-num':'');pgNum.textContent=pageNum;cell.appendChild(pgNum);
-  const content=document.createElement('div');content.className='pg-content';
-  const entry=pageMap[pageNum];
-  if(entry){
-    const chip=document.createElement('div');chip.className='story-chip'+(entry.isStart?'':' cont');chip.style.cssText=chipStyle(entry.story.type);
-    if(entry.isStart){chip.textContent=entry.story.title;if(entry.story.pages>1){const b=document.createElement('span');b.textContent=' ['+entry.story.pages+'p]';b.style.cssText='font-size:9px;opacity:0.6;font-weight:400;';chip.appendChild(b);}}
-    else{chip.textContent='— cont.';}
-    content.appendChild(chip);
-  }
-  cell.appendChild(content);return cell;
+  const pn=document.createElement('div');pn.className='pg-num'+(!isLeft?' right-num':'');pn.textContent=pg;cell.appendChild(pn);
+  const ct=document.createElement('div');ct.className='pg-content';
+  const e=pageMap[pg];
+  if(e){const c=document.createElement('div');c.className='story-chip'+(e.isStart?'':' cont');c.style.cssText=chipStyle(e.story.type);
+    if(e.isStart){c.textContent=e.story.title;if(e.story.pages>1){const b=document.createElement('span');b.textContent=' ['+e.story.pages+'p]';b.style.cssText='font-size:9px;opacity:0.6;font-weight:400;';c.appendChild(b);}}
+    else c.textContent='— cont.';ct.appendChild(c);}
+  cell.appendChild(ct);return cell;
+}
+function makeSpread(lc,rc,label,isCover){
+  const w=document.createElement('div');w.className='spread-wrap';
+  const lb=document.createElement('div');lb.className='spread-label';lb.textContent=label;w.appendChild(lb);
+  const sd=document.createElement('div');sd.className='spread'+(isCover?' is-cover':'');
+  sd.appendChild(lc);
+  if(rc){const sp=document.createElement('div');sp.className='spine'+(isCover?' cover-spine':'');sd.appendChild(sp);sd.appendChild(rc);}
+  w.appendChild(sd);return w;
 }
 
-function makeSpread(leftCell,rightCell,labelText,isCover){
-  const wrap=document.createElement('div');wrap.className='spread-wrap';
-  const lbl=document.createElement('div');lbl.className='spread-label';lbl.textContent=labelText;wrap.appendChild(lbl);
-  const spreadDiv=document.createElement('div');spreadDiv.className='spread'+(isCover?' cover-spread':'');
-  spreadDiv.appendChild(leftCell);
-  const spine=document.createElement('div');spine.className='spine'+(isCover?' cover-spine':'');spreadDiv.appendChild(spine);
-  spreadDiv.appendChild(rightCell);
-  wrap.appendChild(spreadDiv);return wrap;
-}
-
-function getGroupAtY(y){return[...document.querySelectorAll('.interior-group')].find(g=>{const r=g.getBoundingClientRect();return y>=r.top&&y<=r.bottom;})||null;}
-function clearHighlights(){document.querySelectorAll('.interior-group').forEach(g=>g.classList.remove('drop-above','drop-below'));}
-
-function onPointerMove(e){
-  if(!dragEl)return;e.preventDefault();
-  ghostEl.style.left=(e.clientX-offsetX)+'px';ghostEl.style.top=(e.clientY-offsetY)+'px';
-  clearHighlights();
-  const t=getGroupAtY(e.clientY);
-  if(t&&t.dataset.id!==dragId){const r=t.getBoundingClientRect();t.classList.add(e.clientY<r.top+r.height/2?'drop-above':'drop-below');}
-}
-
-function onPointerUp(e){
-  if(!dragEl)return;
-  document.removeEventListener('pointermove',onPointerMove);document.removeEventListener('pointerup',onPointerUp);
-  ghostEl.remove();ghostEl=null;dragEl.classList.remove('drag-active');clearHighlights();
-  const t=getGroupAtY(e.clientY);
-  if(t&&t.dataset.id!==dragId){
-    const r=t.getBoundingClientRect();const before=e.clientY<r.top+r.height/2;
-    const si=storyOrder.indexOf(dragId);storyOrder.splice(si,1);
-    const ti=storyOrder.indexOf(t.dataset.id);storyOrder.splice(before?ti:ti+1,0,dragId);
-    renderEntries();renderGrid();
-  }
-  dragEl=null;dragId=null;
-}
-
-function buildLayout(){
-  totalPages=parseInt(document.getElementById('pg-input').value)||104;
-  renderGrid();
-}
+function buildLayout(){totalPages=parseInt(document.getElementById('pg-input').value)||104;renderGrid();}
 
 function renderGrid(){
   const grid=document.getElementById('grid');grid.innerHTML='';
-  const interior=getInteriorStories();
-  const{map:pageMap,lastPage}=buildInteriorPageMap(interior);
-  const fc=getStoriesByType('frontcover')[0]||null;
-  const bc=getStoriesByType('backcover')[0]||null;
-  const ifc=getStoriesByType('ifc')[0]||null;
-  const ibc=getStoriesByType('ibc')[0]||null;
+  const pageMap={};let pNum=1;
+  storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++){pageMap[pNum]={story:s,isStart:i===0};pNum++;}});
+  const totalInterior=pNum-1;
 
-  const coverSec=document.createElement('div');
-  const coverLbl=document.createElement('div');coverLbl.className='section-label';coverLbl.textContent='Covers';coverSec.appendChild(coverLbl);
-  const coverRow=document.createElement('div');coverRow.className='grid-row';
-  coverRow.appendChild(makeSpread(makeCoverCell(fc,'Front cover',true),makeCoverCell(bc,'Back cover',false),'Front cover / Back cover',true));
-  coverRow.appendChild(makeSpread(makeCoverCell(ifc,'Inside front cover',true),makeCoverCell(ibc,'Inside back cover',false),'Inside front cover / Inside back cover',true));
-  const ph1=document.createElement('div');ph1.style.flex='1';coverRow.appendChild(ph1);
-  const ph2=document.createElement('div');ph2.style.flex='1';coverRow.appendChild(ph2);
-  coverSec.appendChild(coverRow);grid.appendChild(coverSec);
+  /* virtual page list: IFC, 1..N, IBC */
+  const vp=['IFC'];
+  for(let p=1;p<=totalInterior;p++)vp.push(p);
+  vp.push('IBC');
 
-  const intSec=document.createElement('div');
-  const intLbl=document.createElement('div');intLbl.className='section-label';intLbl.style.marginTop='6px';intLbl.textContent='Interior pages';intSec.appendChild(intLbl);
-
-  const SPREADS_PER_ROW=4;
-  const spreads=[];
-  const maxPage=Math.max(lastPage,totalPages-2);
-  for(let p=1;p<=maxPage;p+=2)spreads.push([p,p+1]);
-
-  let cursor=1;
-  const storySpreadMap=[];
-  interior.forEach(s=>{
-    storySpreadMap.push({storyId:s.id,story:s,startSpread:Math.floor((cursor-1)/2),numSpreads:Math.ceil(s.pages/2)});
-    cursor+=s.pages;
-  });
-
-  storySpreadMap.forEach(({storyId,story,startSpread,numSpreads})=>{
-    const group=document.createElement('div');group.className='interior-group';group.dataset.id=storyId;
-    const handleRow=document.createElement('div');handleRow.className='story-group-handle-row';
-    const handle=document.createElement('span');handle.className='drag-handle';handle.textContent='⠿';handle.title='Drag to reorder';
-    const glabel=document.createElement('span');glabel.style.cssText='font-size:10px;font-weight:600;color:var(--text-secondary);';glabel.textContent=story.title;
-    handleRow.appendChild(handle);handleRow.appendChild(glabel);group.appendChild(handleRow);
-
-    const storySpreadsList=spreads.slice(startSpread,startSpread+numSpreads);
-    for(let r=0;r<storySpreadsList.length;r+=SPREADS_PER_ROW){
-      const rowDiv=document.createElement('div');rowDiv.className='grid-row';
-      const chunk=storySpreadsList.slice(r,r+SPREADS_PER_ROW);
-      chunk.forEach(([lp,rp])=>{rowDiv.appendChild(makeSpread(makeInteriorCell(lp,true,pageMap),makeInteriorCell(rp,false,pageMap),lp+' \u2013 '+rp,false));});
-      for(let f=chunk.length;f<SPREADS_PER_ROW;f++){const ph=document.createElement('div');ph.style.flex='1';rowDiv.appendChild(ph);}
-      group.appendChild(rowDiv);
-    }
-
-    handle.addEventListener('pointerdown',e=>{
-      e.preventDefault();dragId=storyId;dragEl=group;
-      const rect=group.getBoundingClientRect();offsetX=e.clientX-rect.left;offsetY=e.clientY-rect.top;
-      ghostEl=document.createElement('div');
-      ghostEl.style.cssText=`position:fixed;pointer-events:none;z-index:9999;width:${rect.width}px;opacity:0.9;left:${e.clientX-offsetX}px;top:${e.clientY-offsetY}px;background:var(--bg-primary);border-radius:var(--radius-md);border:1.5px solid var(--accent);padding:6px 10px;font-size:11px;font-weight:600;color:var(--text-secondary);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;`;
-      ghostEl.textContent=story.title+' ('+story.pages+'p)';
-      document.body.appendChild(ghostEl);group.classList.add('drag-active');
-      document.addEventListener('pointermove',onPointerMove,{passive:false});
-      document.addEventListener('pointerup',onPointerUp);
-    });
-
-    intSec.appendChild(group);
-  });
-
-  const usedInteriorPages=interior.reduce((a,s)=>a+s.pages,0);
-  const emptyStart=usedInteriorPages+1;
-  if(emptyStart<=totalPages-2){
-    const emptySpread=[];
-    for(let p=emptyStart;p<=totalPages-2;p+=2)emptySpread.push([p,p+1]);
-    for(let r=0;r<emptySpread.length;r+=SPREADS_PER_ROW){
-      const rowDiv=document.createElement('div');rowDiv.className='grid-row';
-      emptySpread.slice(r,r+SPREADS_PER_ROW).forEach(([lp,rp])=>{rowDiv.appendChild(makeSpread(makeInteriorCell(lp,true,{}),makeInteriorCell(rp,false,{}),lp+' \u2013 '+rp,false));});
-      intSec.appendChild(rowDiv);
-    }
+  /* pair into spreads */
+  const allSpreads=[];
+  for(let i=0;i<vp.length;i+=2){
+    const lp=vp[i],rp=i+1<vp.length?vp[i+1]:null;
+    let label=typeof lp==='number'?''+lp:lp;
+    if(rp!==null)label+=' – '+(typeof rp==='number'?''+rp:rp);
+    allSpreads.push({lp,rp,label});
   }
 
-  grid.appendChild(intSec);
-  const totalUsed=storyOrder.reduce((a,id)=>{const s=stories.find(x=>x.id===id);return a+(s?s.pages:0);},0);
-  const remaining=totalPages-totalUsed;
-  document.getElementById('status').textContent=storyOrder.length+' stories \u00b7 '+totalUsed+'pp used \u00b7 '+(remaining>=0?remaining+'pp open':Math.abs(remaining)+'pp over');
+  /* assign each spread to a story */
+  function storyOfSpread(sp){
+    const pg=typeof sp.lp==='number'?sp.lp:typeof sp.rp==='number'?sp.rp:null;
+    return pg?pageMap[pg]?pageMap[pg].story:null:null;
+  }
+
+  /* group consecutive spreads by story */
+  const blocks=[];
+  let i=0;
+  while(i<allSpreads.length){
+    const sp=allSpreads[i];const story=storyOfSpread(sp);
+    if(!story){blocks.push({story:null,spreads:[sp]});i++;continue;}
+    const grp=[sp];i++;
+    while(i<allSpreads.length&&storyOfSpread(allSpreads[i])?.id===story.id){grp.push(allSpreads[i]);i++;}
+    blocks.push({story,spreads:grp});
+  }
+
+  /* front cover */
+  const fcW=document.createElement('div');fcW.className='spread-wrap';
+  const fcL=document.createElement('div');fcL.className='spread-label';fcL.textContent='Front cover';fcW.appendChild(fcL);
+  const fcS=document.createElement('div');fcS.className='spread is-cover';fcS.appendChild(makeFixedCell('Front cover',true));
+  fcW.appendChild(fcS);grid.appendChild(fcW);
+
+  /* story blocks */
+  blocks.forEach(block=>{
+    const blockEl=document.createElement('div');blockEl.className='story-block';
+    if(block.story){
+      blockEl.style.display='flex';blockEl.style.flexWrap='wrap';blockEl.style.gap='6px';blockEl.style.alignItems='flex-start';blockEl.style.position='relative';
+      blockEl.dataset.id=block.story.id;
+      const hr=document.createElement('div');hr.className='block-handle-row';
+      const gh=document.createElement('span');gh.className='grid-handle';gh.textContent='⠿';gh.title='Drag left/right to reorder';gh.style.touchAction='none';
+      gh.addEventListener('pointerdown',e=>startDrag(e,block.story.id,blockEl,'grid',block.story.title,block.story.pages));
+      hr.appendChild(gh);blockEl.appendChild(hr);
+    }
+    block.spreads.forEach(sp=>{
+      const lc=sp.lp==='IFC'?makeFixedCell('IFC',true):makePageCell(sp.lp,true,pageMap);
+      const rc=sp.rp===null?null:sp.rp==='IBC'?makeFixedCell('IBC',false):makePageCell(sp.rp,false,pageMap);
+      blockEl.appendChild(makeSpread(lc,rc,sp.label,false));
+    });
+    grid.appendChild(blockEl);
+  });
+
+  /* back cover */
+  const bcW=document.createElement('div');bcW.className='spread-wrap';
+  const bcL=document.createElement('div');bcL.className='spread-label';bcL.textContent='Back cover';bcW.appendChild(bcL);
+  const bcS=document.createElement('div');bcS.className='spread is-cover';bcS.appendChild(makeFixedCell('Back cover',true));
+  bcW.appendChild(bcS);grid.appendChild(bcW);
+
+  const used=storyOrder.reduce((a,id)=>{const s=stories.find(x=>x.id===id);return a+(s?s.pages:0);},0);
+  const open=totalPages-4-used;
+  document.getElementById('status').textContent=storyOrder.length+' stories · '+used+'pp interior · '+(open>=0?open+'pp open':Math.abs(open)+'pp over');
 }
 
-document.getElementById('import-manual-btn').addEventListener('click',addManualStories);
-document.getElementById('apply-btn').addEventListener('click',buildLayout);
-document.getElementById('rebuild-btn').addEventListener('click',buildLayout);
-document.getElementById('export-pdf-btn').addEventListener('click',()=>window.print());
-document.getElementById('export-txt-btn').addEventListener('click',()=>{
-  const lines=['LAYOUT PLAN','============','','COVERS','------'];
-  const fc=getStoriesByType('frontcover')[0];const bc=getStoriesByType('backcover')[0];
-  const ifc=getStoriesByType('ifc')[0];const ibc=getStoriesByType('ibc')[0];
-  lines.push('Front cover  | Back cover    '+(fc?fc.title:'\u2014')+'  /  '+(bc?bc.title:'\u2014'));
-  lines.push('Inside front | Inside back   '+(ifc?ifc.title:'\u2014')+'  /  '+(ibc?ibc.title:'\u2014'));
-  lines.push('','INTERIOR','--------');
-  const interior=getInteriorStories();
-  const{map}=buildInteriorPageMap(interior);
-  const maxP=interior.reduce((a,s)=>a+s.pages,0);
-  for(let p=1;p<=maxP;p+=2){
-    const le=map[p],re=map[p+1];
-    const ll=le?(le.isStart?le.story.title:'\u2014 cont.'):'\u2014';
-    const rl=re?(re.isStart?re.story.title:'\u2014 cont.'):'\u2014';
-    lines.push('pp.'+String(p).padStart(3)+' | '+String(p+1).padStart(3)+'   '+ll+' / '+rl);
-  }
-  const blob=new Blob([lines.join('\n')],{type:'text/plain'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='layout_plan.txt';a.click();
-});
-
-document.getElementById('tab-manual-btn').addEventListener('click',()=>{
-  document.getElementById('tab-manual').style.display='flex';document.getElementById('tab-csv').style.display='none';
-  document.getElementById('tab-manual-btn').classList.add('active');document.getElementById('tab-csv-btn').classList.remove('active');
-});
-document.getElementById('tab-csv-btn').addEventListener('click',()=>{
-  document.getElementById('tab-csv').style.display='flex';document.getElementById('tab-manual').style.display='none';
-  document.getElementById('tab-csv-btn').classList.add('active');document.getElementById('tab-manual-btn').classList.remove('active');
-});
-document.getElementById('csv-browse-btn').addEventListener('click',()=>document.getElementById('csv-file-input').click());
-document.getElementById('csv-file-input').addEventListener('change',function(){
-  if(this.files[0]){document.getElementById('csv-status').textContent='Reading '+this.files[0].name+'\u2026';const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(this.files[0]);}
-});
+document.getElementById('add-btn').onclick=addStory;
+document.getElementById('add-title').addEventListener('keydown',e=>{if(e.key==='Enter')addStory();});
+document.getElementById('apply-btn').onclick=buildLayout;
+document.getElementById('rebuild-btn').onclick=buildLayout;
+document.getElementById('export-pdf-btn').onclick=()=>window.print();
+document.getElementById('export-txt-btn').onclick=()=>{
+  const pageMap={};let c=1;storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++)pageMap[c+i]={story:s,isStart:i===0};c+=s.pages;});
+  const lines=['LAYOUT PLAN','============','Front cover | IFC\u2013p1 | interior | pN\u2013IBC | Back cover','','INTERIOR','--------'];
+  for(let p=1;p<c;p+=2){const le=pageMap[p],re=pageMap[p+1];lines.push('pp.'+String(p).padStart(3)+' | '+String(p+1).padStart(3)+'   '+(le?le.isStart?le.story.title:'\u2014 cont.':'\u2014')+' / '+(re?re.isStart?re.story.title:'\u2014 cont.':'\u2014'));}
+  const blob=new Blob([lines.join('\n')],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='layout_plan.txt';a.click();
+};
+document.getElementById('csv-browse-btn').onclick=()=>document.getElementById('csv-file-input').click();
+document.getElementById('csv-file-input').onchange=function(){if(this.files[0]){document.getElementById('csv-status').textContent='Reading\u2026';const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(this.files[0]);}};
 </script>
 </body>
 </html>
