@@ -24,7 +24,6 @@
   #print-header{display:none!important;}
   #print-legend{display:none!important;}
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --bg-primary:#ffffff;--bg-secondary:#f5f4f0;--bg-tertiary:#efede8;
@@ -313,19 +312,16 @@ function makePageCell(pg,isLeft,pageMap){
     else c.textContent='\u2014 cont.';ct.appendChild(c);}
   cell.appendChild(ct);return cell;
 }
-function makeSpreadWrap(lc,rc,label,isCover){
+function makeSpreadWrap(labelText,leftCell,rightCell,isCover){
   const w=document.createElement('div');w.className='spread-wrap';
-  const lb=document.createElement('div');lb.className='spread-label';lb.textContent=label;w.appendChild(lb);
+  const lb=document.createElement('div');lb.className='spread-label';lb.textContent=labelText;w.appendChild(lb);
   const sd=document.createElement('div');sd.className='spread'+(isCover?' is-cover':'');
-  sd.appendChild(lc);
-  if(rc){const sp=document.createElement('div');sp.className='spine'+(isCover?' cover-spine':'');sd.appendChild(sp);sd.appendChild(rc);}
+  sd.appendChild(leftCell);
+  if(rightCell){const sp=document.createElement('div');sp.className='spine'+(isCover?' cover-spine':'');sd.appendChild(sp);sd.appendChild(rightCell);}
   w.appendChild(sd);return w;
 }
 function makeSoloWrap(label){
-  const w=document.createElement('div');w.className='spread-wrap';
-  const lb=document.createElement('div');lb.className='spread-label';lb.textContent=label;w.appendChild(lb);
-  const sd=document.createElement('div');sd.className='spread is-cover';sd.appendChild(makeFixedCell(label,true));
-  w.appendChild(sd);return w;
+  return makeSpreadWrap(label,makeFixedCell(label,true),null,true);
 }
 function renderGrid(){
   const grid=document.getElementById('grid');grid.innerHTML='';
@@ -339,44 +335,33 @@ function renderGrid(){
   const pageMap={};let pNum=1;
   storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++){pageMap[pNum]={story:s,isStart:i===0};pNum++;}});
   const N=pNum-1;
-  const vList=['IFC'];for(let p=1;p<=N;p++)vList.push(p);vList.push('IBC');
-  const allSpreads=[];
-  for(let i=0;i<vList.length;i+=2){
-    const lp=vList[i];const rp=i+1<vList.length?vList[i+1]:null;
-    let label='';
-    if(lp==='IFC')label='IFC'+(rp!==null?' \u2013'+(typeof rp==='number'?rp:rp):'');
-    else if(rp==='IBC')label=lp+' \u2013 IBC';
-    else if(rp===null)label=''+lp;
-    else label=lp+' \u2013 '+rp;
-    allSpreads.push({lp,rp,label});
-  }
-  function storyOfSpread(sp){const pg=typeof sp.lp==='number'?sp.lp:typeof sp.rp==='number'?sp.rp:null;return pg&&pageMap[pg]?pageMap[pg].story:null;}
-  const blocks=[];let i=0;
-  while(i<allSpreads.length){
-    const sp=allSpreads[i];const story=storyOfSpread(sp);
-    if(!story){blocks.push({story:null,spreads:[sp]});i++;continue;}
-    const grp=[sp];i++;
-    while(i<allSpreads.length){const ns=storyOfSpread(allSpreads[i]);if(ns&&ns.id===story.id){grp.push(allSpreads[i]);i++;}else break;}
-    blocks.push({story,spreads:grp});
-  }
+  /* Fixed covers — standalone slots, never inside story blocks */
   grid.appendChild(makeSoloWrap('Front cover'));
-  blocks.forEach(block=>{
-    const blockEl=document.createElement('div');blockEl.className='story-block';
-    if(block.story){
+  grid.appendChild(makeSpreadWrap('Inside front cover',makeFixedCell('Inside front cover',true),null,true));
+  /* Interior story blocks */
+  if(N>0){
+    let pg=1;
+    storyOrder.forEach(id=>{
+      const s=stories.find(x=>x.id===id);if(!s)return;
+      const blockEl=document.createElement('div');blockEl.className='story-block';
       blockEl.style.cssText='display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;position:relative;';
-      blockEl.dataset.id=block.story.id;
+      blockEl.dataset.id=s.id;
       const hr=document.createElement('div');hr.className='block-handle-row';
       const gh=document.createElement('span');gh.className='grid-handle';gh.textContent='\u283F';gh.title='Drag to reorder';gh.style.touchAction='none';
-      gh.addEventListener('pointerdown',e=>startDrag(e,block.story.id,blockEl,'grid',block.story.title,block.story.pages));
+      gh.addEventListener('pointerdown',e=>startDrag(e,s.id,blockEl,'grid',s.title,s.pages));
       hr.appendChild(gh);blockEl.appendChild(hr);
-    }
-    block.spreads.forEach(sp=>{
-      const lc=sp.lp==='IFC'?makeFixedCell('Inside front cover',true):makePageCell(sp.lp,true,pageMap);
-      const rc=sp.rp===null?null:sp.rp==='IBC'?makeFixedCell('Inside back cover',false):makePageCell(sp.rp,false,pageMap);
-      blockEl.appendChild(makeSpreadWrap(lc,rc,sp.label,false));
+      for(let i=0;i<s.pages;i+=2){
+        const lp=pg+i;const rp=i+1<s.pages?pg+i+1:null;
+        const label=lp+(rp?' \u2013 '+rp:'');
+        const lc=makePageCell(lp,true,pageMap);
+        const rc=rp!==null?makePageCell(rp,false,pageMap):null;
+        blockEl.appendChild(makeSpreadWrap(label,lc,rc,false));
+      }
+      grid.appendChild(blockEl);
+      pg+=s.pages;
     });
-    grid.appendChild(blockEl);
-  });
+  }
+  grid.appendChild(makeSpreadWrap('Inside back cover',makeFixedCell('Inside back cover',true),null,true));
   grid.appendChild(makeSoloWrap('Back cover'));
   const total=interior+4;
   document.getElementById('print-subtitle').textContent='Blair Academy Bulletin \u00b7 '+total+' pages \u00b7 '+storyOrder.length+' stories';
@@ -393,8 +378,9 @@ document.getElementById('pg-input').addEventListener('input',renderGrid);
 document.getElementById('export-pdf-btn').onclick=()=>window.print();
 document.getElementById('export-txt-btn').onclick=()=>{
   const pageMap={};let c=1;storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++)pageMap[c+i]={story:s,isStart:i===0};c+=s.pages;});
-  const lines=['LAYOUT PLAN','============','Front cover (solo)','IFC \u2013 p.1','...','p.'+(c-1)+' \u2013 IBC','Back cover (solo)','','INTERIOR','--------'];
+  const lines=['LAYOUT PLAN','============','Front cover (solo)','Inside front cover (solo)','','INTERIOR','--------'];
   for(let p=1;p<c;p+=2){const le=pageMap[p],re=pageMap[p+1];lines.push('pp.'+String(p).padStart(3)+' | '+String(p+1).padStart(3)+'   '+(le?le.isStart?le.story.title:'\u2014 cont.':'\u2014')+' / '+(re?re.isStart?re.story.title:'\u2014 cont.':'\u2014'));}
+  lines.push('','Inside back cover (solo)','Back cover (solo)');
   const blob=new Blob([lines.join('\n')],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='layout_plan.txt';a.click();
 };
 document.getElementById('csv-browse-btn').onclick=()=>document.getElementById('csv-file-input').click();
