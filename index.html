@@ -12,10 +12,8 @@
   #right{overflow:visible!important;background:white!important;padding:0!important;}
   body{-webkit-print-color-adjust:exact;print-color-adjust:exact;overflow:visible!important;height:auto!important;}
   html{overflow:visible!important;height:auto!important;}
-  .spread-row{break-inside:avoid;}
   .drag-handle,.grid-handle{display:none!important;}
 }
-
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --bg-primary:#ffffff;--bg-secondary:#f5f4f0;--bg-tertiary:#efede8;
@@ -30,20 +28,15 @@
     --border-light:rgba(255,255,255,0.07);--border-mid:rgba(255,255,255,0.13);
   }
 }
-
 html,body{height:100%;overflow:hidden;}
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg-tertiary);color:var(--text-primary);font-size:14px;line-height:1.5;display:flex;flex-direction:column;}
-
 #h1-bar{background:var(--bg-primary);border-bottom:0.5px solid var(--border-light);padding:11px 18px;display:flex;align-items:baseline;gap:10px;flex-shrink:0;}
 #h1-bar h1{font-size:14px;font-weight:600;color:var(--text-primary);}
 #h1-bar .subtitle{font-size:11px;color:var(--text-tertiary);}
-
 #page{display:flex;flex:1;overflow:hidden;}
-
 #left{width:290px;flex-shrink:0;border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;background:var(--bg-primary);}
 #left-top{padding:12px;border-bottom:0.5px solid var(--border-light);flex-shrink:0;}
 #left-top h2{font-size:12px;font-weight:600;color:var(--text-primary);margin-bottom:10px;}
-
 #add-form{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
 #add-title{width:100%;font-size:11px;padding:5px 8px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-secondary);color:var(--text-primary);font-family:inherit;}
 #add-title::placeholder{color:var(--text-tertiary);}
@@ -52,13 +45,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 #add-type{flex:1;}#add-pages{width:54px;}
 #add-btn{font-size:11px;padding:4px 10px;cursor:pointer;border-radius:var(--radius-md);border:0.5px solid var(--border-mid);background:var(--bg-primary);color:var(--text-primary);white-space:nowrap;font-family:inherit;}
 #add-btn:hover{background:var(--bg-secondary);}
-
 #csv-row{display:flex;gap:5px;align-items:center;padding-top:6px;border-top:0.5px solid var(--border-light);}
 #csv-browse-btn{flex:1;font-size:11px;padding:5px 8px;cursor:pointer;border-radius:var(--radius-md);border:0.5px dashed var(--border-mid);background:var(--bg-secondary);color:var(--text-secondary);text-align:center;font-family:inherit;}
 #csv-browse-btn:hover{background:var(--bg-tertiary);}
 #csv-file-input{display:none;}
 #csv-status{font-size:10px;color:var(--text-tertiary);}
-
 #story-entries{flex:1;overflow-y:auto;padding:8px;}
 .entry-row{display:flex;align-items:center;gap:4px;padding:4px 5px;margin-bottom:3px;border:0.5px solid var(--border-light);border-radius:var(--radius-md);background:var(--bg-primary);transition:opacity 0.1s,border-color 0.1s;}
 .entry-row.dragging{opacity:0.2;}
@@ -75,42 +66,34 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .entry-del:hover{color:#A32D2D;}
 #apply-btn{margin:8px;font-size:12px;padding:7px;cursor:pointer;border-radius:var(--radius-md);font-weight:600;border:0.5px solid var(--border-mid);background:var(--bg-primary);color:var(--text-primary);font-family:inherit;width:calc(100% - 16px);}
 #apply-btn:hover{background:var(--bg-secondary);}
-
 #right{flex:1;overflow:auto;background:var(--bg-tertiary);padding:14px;display:flex;flex-direction:column;}
 #right-top{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;flex-shrink:0;}
 #right-top label{font-size:11px;color:var(--text-secondary);}
 #pg-input{width:52px;font-size:11px;padding:4px 5px;border:0.5px solid var(--border-mid);border-radius:var(--radius-md);background:var(--bg-primary);color:var(--text-primary);}
+#pg-input::placeholder{color:var(--text-tertiary);}
 .top-btn{font-size:11px;padding:4px 9px;cursor:pointer;border-radius:var(--radius-md);border:0.5px solid var(--border-mid);background:var(--bg-primary);color:var(--text-primary);font-family:inherit;}
 .top-btn:hover{background:var(--bg-secondary);}
 #status{font-size:11px;color:var(--text-secondary);margin-left:auto;}
-
 #legend-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center;flex-shrink:0;}
 .leg{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--text-secondary);}
 .leg-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
 .leg-hint{font-size:10px;color:var(--text-tertiary);margin-left:6px;padding-left:8px;border-left:0.5px solid var(--border-light);}
-
-/* Continuous lightbox grid */
 #grid{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;align-content:flex-start;flex:1;}
-
 .story-block{display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;position:relative;padding:4px;border-radius:8px;border:2px solid transparent;transition:border-color 0.1s,background 0.1s,opacity 0.1s;}
 .story-block.dragging{opacity:0.2;}
 .story-block.drop-before{border-left-color:var(--accent);background:rgba(55,138,221,0.04);}
 .story-block.drop-after{border-right-color:var(--accent);background:rgba(55,138,221,0.04);}
-
 .block-handle-row{position:absolute;top:4px;left:8px;display:flex;align-items:center;gap:4px;pointer-events:none;z-index:2;}
 .grid-handle{font-size:12px;color:var(--text-tertiary);cursor:grab;padding:1px 3px;border-radius:3px;line-height:1;touch-action:none;pointer-events:all;background:var(--bg-primary);border:0.5px solid var(--border-light);opacity:0.85;}
 .grid-handle:hover{opacity:1;color:var(--text-secondary);}
 .grid-handle:active{cursor:grabbing;}
-
 .spread-wrap{flex:0 0 auto;display:flex;flex-direction:column;gap:2px;}
 .spread-label{font-size:9px;color:var(--text-tertiary);letter-spacing:0.03em;white-space:nowrap;}
 .spread{display:flex;border:0.5px solid var(--border-mid);border-radius:6px;overflow:hidden;background:var(--bg-primary);}
 .spread.is-cover{border-color:#888780;}
-
 .page-cell{flex:0 0 72px;min-height:100px;display:flex;flex-direction:column;}
 .page-cell.left-page{border-right:2px solid var(--border-mid);}
 .page-cell.fixed-cover{background:#E8E6DF;}
-
 .pg-num{font-size:9px;color:var(--text-tertiary);padding:3px 4px 1px;line-height:1;flex-shrink:0;}
 .pg-num.right-num{text-align:right;}
 .pg-num.cover-num{color:#5F5E5A;font-weight:500;}
@@ -123,12 +106,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 </style>
 </head>
 <body>
-
 <div id="h1-bar">
   <h1>Magazine Layout Planner</h1>
   <span class="subtitle">Blair Academy Bulletin</span>
 </div>
-
 <div id="page">
 <div id="left">
   <div id="left-top">
@@ -163,13 +144,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div id="story-entries"></div>
   <button id="apply-btn">Build layout</button>
 </div>
-
 <div id="right">
   <div id="right-top">
-    <label>Total pages:</label>
-    <input type="number" id="pg-input" value="104" min="4" max="300" step="2">
-    <button class="top-btn" id="rebuild-btn">Update</button>
-    <button class="top-btn" id="export-pdf-btn">Export PDF (8.5×11)</button>
+    <label>Page target:</label>
+    <input type="number" id="pg-input" min="4" max="300" step="2" placeholder="auto">
+    <button class="top-btn" id="export-pdf-btn">Export PDF (8.5&times;11)</button>
     <button class="top-btn" id="export-txt-btn">Export text</button>
     <span id="status"></span>
   </div>
@@ -179,14 +158,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="leg"><div class="leg-dot" style="background:#378ADD;"></div>Feature</div>
     <div class="leg"><div class="leg-dot" style="background:#639922;"></div>Boilerplate</div>
     <div class="leg"><div class="leg-dot" style="background:#BA7517;"></div>Ad</div>
-    <span class="leg-hint">Drag ⠿ in either panel to reorder</span>
+    <span class="leg-hint">Drag &#x283F; in either panel to reorder</span>
   </div>
   <div id="grid"></div>
 </div>
 </div>
-
 <script>
-let stories=[],storyOrder=[],totalPages=104,idSeq=0;
+let stories=[],storyOrder=[],idSeq=0;
 let dragId=null,dragEl=null,ghostEl=null,ptrOffX=0,ptrOffY=0,dragMode=null;
 
 const TYPE_MAP={
@@ -196,6 +174,8 @@ const TYPE_MAP={
   ad:{bg:'#FAEEDA',color:'#633806',label:'Ad'},
 };
 function chipStyle(t){const x=TYPE_MAP[t]||TYPE_MAP.boilerplate;return`background:${x.bg};color:${x.color};`;}
+function calcInteriorPages(){return storyOrder.reduce((a,id)=>{const s=stories.find(x=>x.id===id);return a+(s?s.pages:0);},0);}
+function getPageTarget(){const v=parseInt(document.getElementById('pg-input').value);return(!isNaN(v)&&v>0)?v:null;}
 
 function isCoverRowCSV(s,ti){
   s=(s||'').toLowerCase().trim();ti=(ti||'').toLowerCase().trim();
@@ -212,7 +192,6 @@ function guessType(s,ti){
   return'boilerplate';
 }
 
-/* ── unified drag engine ── */
 function getSidebarTargets(){return[...document.querySelectorAll('.entry-row[data-id]')];}
 function getGridTargets(){return[...document.querySelectorAll('.story-block[data-id]')];}
 function clearHL(){
@@ -221,16 +200,12 @@ function clearHL(){
 }
 function sidebarTargetAtY(y){return getSidebarTargets().find(el=>{const r=el.getBoundingClientRect();return y>=r.top&&y<=r.bottom;})||null;}
 function gridTargetAtX(x){
-  for(const b of getGridTargets()){
-    const r=b.getBoundingClientRect();
-    if(x>=r.left&&x<=r.right)return{el:b,before:x<r.left+r.width/2};
-  }
+  for(const b of getGridTargets()){const r=b.getBoundingClientRect();if(x>=r.left&&x<=r.right)return{el:b,before:x<r.left+r.width/2};}
   return null;
 }
 function onPtrMove(e){
   if(!dragEl)return;e.preventDefault();
-  ghostEl.style.left=(e.clientX-ptrOffX)+'px';
-  ghostEl.style.top=(e.clientY-ptrOffY)+'px';
+  ghostEl.style.left=(e.clientX-ptrOffX)+'px';ghostEl.style.top=(e.clientY-ptrOffY)+'px';
   clearHL();
   if(dragMode==='sidebar'){
     const t=sidebarTargetAtY(e.clientY);
@@ -242,8 +217,7 @@ function onPtrMove(e){
 }
 function onPtrUp(e){
   if(!dragEl)return;
-  document.removeEventListener('pointermove',onPtrMove);
-  document.removeEventListener('pointerup',onPtrUp);
+  document.removeEventListener('pointermove',onPtrMove);document.removeEventListener('pointerup',onPtrUp);
   if(ghostEl){ghostEl.remove();ghostEl=null;}
   dragEl.classList.remove('dragging');clearHL();
   if(dragMode==='sidebar'){
@@ -267,29 +241,26 @@ function startDrag(e,id,el,mode,title,pages){
   ghostEl=document.createElement('div');
   ghostEl.style.cssText=`position:fixed;pointer-events:none;z-index:9999;min-width:140px;max-width:260px;opacity:0.93;left:${e.clientX-ptrOffX}px;top:${e.clientY-ptrOffY}px;background:var(--bg-primary);border-radius:6px;border:1.5px solid #378ADD;padding:5px 10px;font-size:11px;font-weight:500;color:var(--text-secondary);box-shadow:0 4px 16px rgba(0,0,0,0.15);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;`;
   ghostEl.textContent=title+' ('+pages+'p)';
-  document.body.appendChild(ghostEl);
-  el.classList.add('dragging');
-  document.addEventListener('pointermove',onPtrMove,{passive:false});
-  document.addEventListener('pointerup',onPtrUp);
+  document.body.appendChild(ghostEl);el.classList.add('dragging');
+  document.addEventListener('pointermove',onPtrMove,{passive:false});document.addEventListener('pointerup',onPtrUp);
 }
 
-/* ── sidebar ── */
 function makeEntryRow(story,index){
   const row=document.createElement('div');row.className='entry-row';row.dataset.id=story.id;
-  const h=document.createElement('span');h.className='drag-handle';h.textContent='⠿';h.title='Drag to reorder';h.style.touchAction='none';
+  const h=document.createElement('span');h.className='drag-handle';h.textContent='\u283F';h.title='Drag to reorder';h.style.touchAction='none';
   h.addEventListener('pointerdown',e=>startDrag(e,story.id,row,'sidebar',story.title,story.pages));
   const num=document.createElement('div');num.className='entry-num';num.textContent=index+1+'';
   const t=document.createElement('div');t.className='entry-title';t.textContent=story.title;t.title=story.title;
   const badge=document.createElement('span');badge.className='entry-badge';badge.style.cssText=chipStyle(story.type);badge.textContent=(TYPE_MAP[story.type]||TYPE_MAP.boilerplate).label;
   const pg=document.createElement('span');pg.className='entry-pages';pg.textContent=story.pages+'p';
-  const del=document.createElement('button');del.className='entry-del';del.textContent='✕';
+  const del=document.createElement('button');del.className='entry-del';del.textContent='\u2715';
   del.onclick=()=>{stories=stories.filter(s=>s.id!==story.id);storyOrder=storyOrder.filter(id=>id!==story.id);renderEntries();renderGrid();};
   row.appendChild(h);row.appendChild(num);row.appendChild(t);row.appendChild(badge);row.appendChild(pg);row.appendChild(del);
   return row;
 }
 function renderEntries(){
   const el=document.getElementById('story-entries');el.innerHTML='';
-  if(!storyOrder.length){el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);padding:10px 6px;">Add a story above or import a CSV. Drag ⠿ in either panel to reorder.</div>';return;}
+  if(!storyOrder.length){el.innerHTML='<div style="font-size:11px;color:var(--text-tertiary);padding:10px 6px;">Add a story above or import a CSV. Drag \u283F in either panel to reorder.</div>';return;}
   storyOrder.forEach((id,i)=>{const s=stories.find(x=>x.id===id);if(s)el.appendChild(makeEntryRow(s,i));});
 }
 function addStory(){
@@ -316,11 +287,10 @@ function parseCSV(text){
     const s={id:'s'+(++idSeq),title,type:guessType(section,title),pages};
     stories.push(s);storyOrder.push(s.id);count++;
   }
-  document.getElementById('csv-status').textContent=count+' imported'+(skipped?' · '+skipped+' skipped':'');
+  document.getElementById('csv-status').textContent=count+' imported'+(skipped?' \u00b7 '+skipped+' skipped':'');
   renderEntries();renderGrid();
 }
 
-/* ── grid cells ── */
 function makeFixedCell(label,isLeft){
   const cell=document.createElement('div');cell.className='page-cell fixed-cover'+(isLeft?' left-page':'');
   const pn=document.createElement('div');pn.className='pg-num cover-num'+(!isLeft?' right-num':'');pn.textContent=label;cell.appendChild(pn);
@@ -335,7 +305,7 @@ function makePageCell(pg,isLeft,pageMap){
   const e=pageMap[pg];
   if(e){const c=document.createElement('div');c.className='story-chip'+(e.isStart?'':' cont');c.style.cssText=chipStyle(e.story.type);
     if(e.isStart){c.textContent=e.story.title;if(e.story.pages>1){const b=document.createElement('span');b.textContent=' ['+e.story.pages+'p]';b.style.cssText='font-size:9px;opacity:0.6;font-weight:400;';c.appendChild(b);}}
-    else c.textContent='— cont.';ct.appendChild(c);}
+    else c.textContent='\u2014 cont.';ct.appendChild(c);}
   cell.appendChild(ct);return cell;
 }
 function makeSpread(lc,rc,label,isCover){
@@ -346,95 +316,88 @@ function makeSpread(lc,rc,label,isCover){
   if(rc){const sp=document.createElement('div');sp.className='spine'+(isCover?' cover-spine':'');sd.appendChild(sp);sd.appendChild(rc);}
   w.appendChild(sd);return w;
 }
-
-function buildLayout(){totalPages=parseInt(document.getElementById('pg-input').value)||104;renderGrid();}
+function makeSoloWrap(label){
+  const w=document.createElement('div');w.className='spread-wrap';
+  const lb=document.createElement('div');lb.className='spread-label';lb.textContent=label;w.appendChild(lb);
+  const sd=document.createElement('div');sd.className='spread is-cover';sd.appendChild(makeFixedCell(label,true));
+  w.appendChild(sd);return w;
+}
 
 function renderGrid(){
   const grid=document.getElementById('grid');grid.innerHTML='';
+  const totalInterior=calcInteriorPages();
+  if(totalInterior===0&&storyOrder.length===0){
+    const es=document.createElement('div');
+    es.style.cssText='display:flex;align-items:center;justify-content:center;flex:1;font-size:13px;color:var(--text-tertiary);text-align:center;padding:40px;width:100%;';
+    es.textContent='Add stories on the left to build your layout.';
+    grid.appendChild(es);return;
+  }
   const pageMap={};let pNum=1;
   storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++){pageMap[pNum]={story:s,isStart:i===0};pNum++;}});
-  const totalInterior=pNum-1;
-
-  /* virtual page list: IFC, 1..N, IBC */
-  const vp=['IFC'];
-  for(let p=1;p<=totalInterior;p++)vp.push(p);
-  vp.push('IBC');
-
-  /* pair into spreads */
-  const allSpreads=[];
-  for(let i=0;i<vp.length;i+=2){
-    const lp=vp[i],rp=i+1<vp.length?vp[i+1]:null;
-    let label=typeof lp==='number'?''+lp:lp;
-    if(rp!==null)label+=' – '+(typeof rp==='number'?''+rp:rp);
-    allSpreads.push({lp,rp,label});
+  const N=pNum-1;
+  const vList=['IFC'];
+  for(let p=1;p<=N;p++)vList.push(p);
+  vList.push('IBC');
+  const spreadDefs=[];
+  for(let i=0;i<vList.length;i+=2){
+    const lp=vList[i];const rp=(i+1<vList.length)?vList[i+1]:null;
+    let label='';
+    if(lp==='IFC')label='IFC'+(rp!==null?'\u2013'+(typeof rp==='number'?rp:rp):'');
+    else if(rp==='IBC')label=(typeof lp==='number'?lp:lp)+'\u2013IBC';
+    else if(rp===null)label=''+lp;
+    else label=lp+'\u2013'+rp;
+    spreadDefs.push({lp,rp,label});
   }
-
-  /* assign each spread to a story */
-  function storyOfSpread(sp){
-    const pg=typeof sp.lp==='number'?sp.lp:typeof sp.rp==='number'?sp.rp:null;
-    return pg?pageMap[pg]?pageMap[pg].story:null:null;
-  }
-
-  /* group consecutive spreads by story */
-  const blocks=[];
-  let i=0;
-  while(i<allSpreads.length){
-    const sp=allSpreads[i];const story=storyOfSpread(sp);
+  function storyOfSpread(sp){const pg=typeof sp.lp==='number'?sp.lp:typeof sp.rp==='number'?sp.rp:null;return pg&&pageMap[pg]?pageMap[pg].story:null;}
+  const blocks=[];let i=0;
+  while(i<spreadDefs.length){
+    const sp=spreadDefs[i];const story=storyOfSpread(sp);
     if(!story){blocks.push({story:null,spreads:[sp]});i++;continue;}
     const grp=[sp];i++;
-    while(i<allSpreads.length&&storyOfSpread(allSpreads[i])?.id===story.id){grp.push(allSpreads[i]);i++;}
+    while(i<spreadDefs.length){const ns=storyOfSpread(spreadDefs[i]);if(ns&&ns.id===story.id){grp.push(spreadDefs[i]);i++;}else break;}
     blocks.push({story,spreads:grp});
   }
-
-  /* front cover */
-  const fcW=document.createElement('div');fcW.className='spread-wrap';
-  const fcL=document.createElement('div');fcL.className='spread-label';fcL.textContent='Front cover';fcW.appendChild(fcL);
-  const fcS=document.createElement('div');fcS.className='spread is-cover';fcS.appendChild(makeFixedCell('Front cover',true));
-  fcW.appendChild(fcS);grid.appendChild(fcW);
-
-  /* story blocks */
+  grid.appendChild(makeSoloWrap('Front cover'));
   blocks.forEach(block=>{
     const blockEl=document.createElement('div');blockEl.className='story-block';
     if(block.story){
-      blockEl.style.display='flex';blockEl.style.flexWrap='wrap';blockEl.style.gap='6px';blockEl.style.alignItems='flex-start';blockEl.style.position='relative';
+      blockEl.style.cssText='display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;position:relative;';
       blockEl.dataset.id=block.story.id;
       const hr=document.createElement('div');hr.className='block-handle-row';
-      const gh=document.createElement('span');gh.className='grid-handle';gh.textContent='⠿';gh.title='Drag left/right to reorder';gh.style.touchAction='none';
+      const gh=document.createElement('span');gh.className='grid-handle';gh.textContent='\u283F';gh.title='Drag left/right to reorder';gh.style.touchAction='none';
       gh.addEventListener('pointerdown',e=>startDrag(e,block.story.id,blockEl,'grid',block.story.title,block.story.pages));
       hr.appendChild(gh);blockEl.appendChild(hr);
     }
     block.spreads.forEach(sp=>{
-      const lc=sp.lp==='IFC'?makeFixedCell('IFC',true):makePageCell(sp.lp,true,pageMap);
-      const rc=sp.rp===null?null:sp.rp==='IBC'?makeFixedCell('IBC',false):makePageCell(sp.rp,false,pageMap);
+      const lc=sp.lp==='IFC'?makeFixedCell('Inside front cover',true):makePageCell(sp.lp,true,pageMap);
+      const rc=sp.rp===null?null:sp.rp==='IBC'?makeFixedCell('Inside back cover',false):makePageCell(sp.rp,false,pageMap);
       blockEl.appendChild(makeSpread(lc,rc,sp.label,false));
     });
     grid.appendChild(blockEl);
   });
-
-  /* back cover */
-  const bcW=document.createElement('div');bcW.className='spread-wrap';
-  const bcL=document.createElement('div');bcL.className='spread-label';bcL.textContent='Back cover';bcW.appendChild(bcL);
-  const bcS=document.createElement('div');bcS.className='spread is-cover';bcS.appendChild(makeFixedCell('Back cover',true));
-  bcW.appendChild(bcS);grid.appendChild(bcW);
-
-  const used=storyOrder.reduce((a,id)=>{const s=stories.find(x=>x.id===id);return a+(s?s.pages:0);},0);
-  const open=totalPages-4-used;
-  document.getElementById('status').textContent=storyOrder.length+' stories · '+used+'pp interior · '+(open>=0?open+'pp open':Math.abs(open)+'pp over');
+  grid.appendChild(makeSoloWrap('Back cover'));
+  const used=N;const target=getPageTarget();const total=used+4;
+  let s=storyOrder.length+' stories \u00b7 '+total+'pp total ('+used+'pp interior + 4 covers)';
+  if(target){const d=target-total;s+=' \u00b7 target: '+target+'pp';if(d>0)s+=' \u00b7 '+d+'pp open';else if(d<0)s+=' \u00b7 '+Math.abs(d)+'pp over';else s+=' \u00b7 on target';}
+  document.getElementById('status').textContent=s;
 }
 
 document.getElementById('add-btn').onclick=addStory;
 document.getElementById('add-title').addEventListener('keydown',e=>{if(e.key==='Enter')addStory();});
-document.getElementById('apply-btn').onclick=buildLayout;
-document.getElementById('rebuild-btn').onclick=buildLayout;
+document.getElementById('apply-btn').onclick=renderGrid;
+document.getElementById('pg-input').addEventListener('input',renderGrid);
 document.getElementById('export-pdf-btn').onclick=()=>window.print();
 document.getElementById('export-txt-btn').onclick=()=>{
-  const pageMap={};let c=1;storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++)pageMap[c+i]={story:s,isStart:i===0};c+=s.pages;});
-  const lines=['LAYOUT PLAN','============','Front cover | IFC\u2013p1 | interior | pN\u2013IBC | Back cover','','INTERIOR','--------'];
+  const pageMap={};let c=1;
+  storyOrder.forEach(id=>{const s=stories.find(x=>x.id===id);if(!s)return;for(let i=0;i<s.pages;i++)pageMap[c+i]={story:s,isStart:i===0};c+=s.pages;});
+  const lines=['LAYOUT PLAN','============','Front cover (solo)','IFC \u2013 p.1','...','p.'+Math.max(1,c-1)+' \u2013 IBC','Back cover (solo)','','INTERIOR','--------'];
   for(let p=1;p<c;p+=2){const le=pageMap[p],re=pageMap[p+1];lines.push('pp.'+String(p).padStart(3)+' | '+String(p+1).padStart(3)+'   '+(le?le.isStart?le.story.title:'\u2014 cont.':'\u2014')+' / '+(re?re.isStart?re.story.title:'\u2014 cont.':'\u2014'));}
   const blob=new Blob([lines.join('\n')],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='layout_plan.txt';a.click();
 };
 document.getElementById('csv-browse-btn').onclick=()=>document.getElementById('csv-file-input').click();
-document.getElementById('csv-file-input').onchange=function(){if(this.files[0]){document.getElementById('csv-status').textContent='Reading\u2026';const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(this.files[0]);}};
+document.getElementById('csv-file-input').onchange=function(){
+  if(this.files[0]){document.getElementById('csv-status').textContent='Reading\u2026';const r=new FileReader();r.onload=e=>parseCSV(e.target.result);r.readAsText(this.files[0]);}
+};
 </script>
 </body>
 </html>
