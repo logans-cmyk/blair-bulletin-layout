@@ -322,8 +322,26 @@ body{font-family:var(--font-sans);background:var(--bg-tertiary);color:var(--text
 .pg-num.right-num{text-align:right;}
 .pg-num.cover-num{color:rgba(255,255,255,0.6);font-weight:600;opacity:1;}
 .pg-content{flex:1;padding:2px 4px 4px;display:flex;flex-direction:column;gap:2px;}
-.story-chip{border-radius:4px;padding:5px 6px;font-size:12px;font-weight:600;line-height:1.35;word-break:break-word;font-family:var(--font-sans);}
-.story-chip.cont{opacity:0.45;font-style:italic;font-weight:400;}
+.story-chip{border-radius:4px;padding:5px 6px;font-size:12px;font-weight:600;line-height:1.35;word-break:break-word;font-family:var(--font-sans);cursor:text;position:relative;}
+.story-chip.cont{opacity:0.45;font-style:italic;font-weight:400;cursor:default;}
+.story-chip:not(.cont):hover::after{content:'✎';position:absolute;top:2px;right:3px;font-size:9px;opacity:0.5;font-style:normal;}
+.chip-edit-input{
+  width:100%;border:none;outline:none;
+  background:rgba(255,255,255,0.25);
+  color:inherit;font:inherit;font-size:inherit;font-weight:inherit;
+  border-bottom:1.5px solid rgba(255,255,255,0.7);
+  padding:0;margin:0;line-height:inherit;
+  border-radius:0;
+}
+.entry-title{flex:1;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;cursor:text;}
+.entry-title:hover{text-decoration:underline;text-decoration-style:dotted;}
+.title-edit-input{
+  flex:1;min-width:0;font-size:13px;font-family:var(--font-sans);
+  border:none;outline:none;
+  border-bottom:1.5px solid #004b8d;
+  background:transparent;color:var(--text-primary);
+  padding:0;margin:0;
+}
 .fixed-label{
   font-size:13px;font-weight:700;color:#ffffff;
   font-style:normal;padding:5px 4px 2px;
@@ -446,7 +464,7 @@ body{font-family:var(--font-sans);background:var(--bg-tertiary);color:var(--text
     <div class="leg"><div class="leg-dot" style="background:#44477a;"></div>Alumni</div>
     <div class="leg"><div class="leg-dot" style="background:#da1a32;"></div>News</div>
     <div class="leg"><div class="leg-dot" style="background:#007a82;"></div>Photo essay</div>
-    <span class="leg-hint">Drag ⠿ in either panel to reorder</span>
+    <span class="leg-hint">Drag ⠿ to reorder &nbsp;·&nbsp; Double-click a title to rename</span>
   </div>
 
   <!-- Print-only header -->
@@ -614,6 +632,46 @@ function startDrag(e, id, el, mode, title, pages) {
 }
 
 /* ── SIDEBAR RENDER ── */
+/* ── INLINE EDIT ── */
+function editStoryTitle(story, titleEl, isChip) {
+  const oldTitle = story.title;
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = oldTitle;
+  input.className = isChip ? 'chip-edit-input' : 'title-edit-input';
+  input.setAttribute('aria-label', 'Edit story title');
+
+  function commit() {
+    const val = input.value.trim();
+    story.title = val || oldTitle;
+    renderEntries();
+    renderGrid();
+  }
+  function cancel() {
+    story.title = oldTitle;
+    renderEntries();
+    renderGrid();
+  }
+
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    if (e.key === 'Escape') { e.preventDefault(); cancel(); }
+    e.stopPropagation(); // prevent drag handlers firing
+  });
+  input.addEventListener('blur', commit);
+  input.addEventListener('pointerdown', e => e.stopPropagation()); // no drag on input
+
+  // Replace the element content with the input
+  if (isChip) {
+    titleEl.textContent = '';
+    titleEl.appendChild(input);
+  } else {
+    titleEl.replaceWith(input);
+  }
+  input.focus();
+  input.select();
+}
+
 function makeEntryRow(story, index) {
   const row = document.createElement('div');
   row.className = 'entry-row'; row.dataset.id = story.id;
@@ -627,7 +685,11 @@ function makeEntryRow(story, index) {
   num.className = 'entry-num'; num.textContent = (index + 1) + '';
 
   const t = document.createElement('div');
-  t.className = 'entry-title'; t.textContent = story.title; t.title = story.title;
+  t.className = 'entry-title'; t.textContent = story.title; t.title = 'Double-click to rename';
+  t.addEventListener('dblclick', e => {
+    e.stopPropagation();
+    editStoryTitle(story, t, false);
+  });
 
   const badge = document.createElement('span');
   badge.className = 'entry-badge';
@@ -774,6 +836,13 @@ function makePageCell(pg, isLeft, pageMap) {
         b.style.cssText = 'font-size:9px;opacity:0.6;font-weight:400;';
         c.appendChild(b);
       }
+      c.title = 'Double-click to rename';
+      c.addEventListener('dblclick', e2 => {
+        e2.stopPropagation();
+        // strip the [Np] badge before editing
+        c.textContent = '';
+        editStoryTitle(e.story, c, true);
+      });
     } else {
       c.textContent = '— cont.';
     }
