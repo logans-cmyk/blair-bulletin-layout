@@ -496,7 +496,7 @@ function calcTotal() {
     const s = stories.find(x => x.id === id);
     return a + (s ? s.pages : 0);
   }, 0);
-  return interior + 4; // 4 fixed cover pages
+  return interior + 3; // front cover + IBC + back cover
 }
 function syncPageTarget() {
   document.getElementById('pg-input').value = calcTotal();
@@ -831,10 +831,10 @@ function renderGrid() {
     return;
   }
 
-  // Build page map: interior pages numbered starting at 3
-  // (p1 = front cover, p2 = IFC; last two = IBC, back cover)
+  // Build page map: interior pages start at p.2
+  // p.1 = front cover; p.2 onward = interior; last two = IBC + back cover
   const pageMap = {};
-  let pNum = 3; // interior starts at page 3
+  let pNum = 2; // interior starts at page 2
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id);
     if (!s) return;
@@ -846,15 +846,14 @@ function renderGrid() {
   // pNum is now first IBC page
   const ibcPage = pNum;
   const bcPage  = pNum + 1;
-  const total   = interior + 4;
+  const total   = interior + 3; // front cover + interior + IBC + back cover
 
   // Fixed covers
   grid.appendChild(makeSoloWrap('Front Cover', 'Front Cover', 1));
-  grid.appendChild(makeSoloWrap('Inside Front Cover', 'IFC', 2));
 
-  // Interior story blocks
+  // Interior story blocks (start at p.2)
   if (interior > 0) {
-    let pg = 3;
+    let pg = 2;
     storyOrder.forEach(id => {
       const s = stories.find(x => x.id === id);
       if (!s) return;
@@ -893,10 +892,10 @@ function renderGrid() {
 
   // Status
   document.getElementById('print-subtitle').textContent =
-    'Blair Academy Bulletin · ' + total + ' pages · ' + storyOrder.length + ' stories';
+    'Blair Academy Bulletin · ' + total + ' pages · ' + storyOrder.length + ' stories (interior begins p.2)';
   const target = parseInt(document.getElementById('pg-input').value) || total;
   const diff   = target - total;
-  let st = storyOrder.length + ' stories · ' + total + 'pp total (' + interior + 'pp interior + 4 covers)';
+  let st = storyOrder.length + ' stories · ' + total + 'pp total (' + interior + 'pp interior + 3 covers)';
   if      (diff > 0) st += ' · ' + diff + 'pp open';
   else if (diff < 0) st += ' · ' + Math.abs(diff) + 'pp over';
   else               st += ' · on target';
@@ -905,30 +904,29 @@ function renderGrid() {
 
 /* ── TEXT EXPORT ── */
 function exportText() {
-  const pageMap = {}; let c = 3;
+  const pageMap = {}; let c = 2;
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id); if (!s) return;
     for (let i = 0; i < s.pages; i++) pageMap[c + i] = { story: s, isStart: i === 0 };
     c += s.pages;
   });
-  const total = (c - 3) + 4;
+  const total = (c - 2) + 3;
   const lines = [
     'BLAIR ACADEMY BULLETIN — LAYOUT PLAN',
     '======================================',
-    'p.1    Front cover (solo)',
-    'p.2    Inside front cover (solo)',
+    'p.1    Front cover',
     '',
-    'INTERIOR',
-    '--------',
+    'INTERIOR (begins p.2)',
+    '---------------------',
   ];
-  for (let p = 3; p < c; p += 2) {
+  for (let p = 2; p < c; p += 2) {
     const le = pageMap[p], re = pageMap[p + 1];
     const lLabel = le ? (le.isStart ? le.story.title : '— cont.') : '—';
     const rLabel = re ? (re.isStart ? re.story.title : '— cont.') : '—';
     lines.push('pp.' + String(p).padStart(3) + '–' + String(p + 1).padStart(3) + '   ' + lLabel + ' / ' + rLabel);
   }
-  lines.push('', 'p.' + c     + '   Inside back cover (solo)');
-  lines.push(     'p.' + (c+1) + '   Back cover (solo)');
+  lines.push('', 'p.' + c     + '   Inside back cover');
+  lines.push(     'p.' + (c+1) + '   Back cover');
   lines.push('', 'Total: ' + total + ' pages · ' + storyOrder.length + ' stories');
   const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
   const a = document.createElement('a');
