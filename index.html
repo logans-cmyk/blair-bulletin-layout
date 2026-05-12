@@ -633,8 +633,16 @@ function startDrag(e, id, el, mode, title, pages) {
 
 /* ── SIDEBAR RENDER ── */
 /* ── INLINE EDIT ── */
-function editStoryTitle(story, titleEl, isChip) {
+function editStoryTitle(storyId, anchorEl, isChip) {
+  // Look up story fresh from the array so we always have the live object
+  const story = stories.find(s => s.id === storyId);
+  if (!story) return;
+  // Prevent opening a second editor if one is already active
+  if (document.querySelector('.chip-edit-input, .title-edit-input')) return;
+
   const oldTitle = story.title;
+  let committed = false;
+
   const input = document.createElement('input');
   input.type = 'text';
   input.value = oldTitle;
@@ -642,34 +650,41 @@ function editStoryTitle(story, titleEl, isChip) {
   input.setAttribute('aria-label', 'Edit story title');
 
   function commit() {
+    if (committed) return;
+    committed = true;
     const val = input.value.trim();
     story.title = val || oldTitle;
     renderEntries();
     renderGrid();
   }
   function cancel() {
+    if (committed) return;
+    committed = true;
     story.title = oldTitle;
     renderEntries();
     renderGrid();
   }
 
   input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    e.stopPropagation();
+    if (e.key === 'Enter')  { e.preventDefault(); commit(); }
     if (e.key === 'Escape') { e.preventDefault(); cancel(); }
-    e.stopPropagation(); // prevent drag handlers firing
   });
-  input.addEventListener('blur', commit);
-  input.addEventListener('pointerdown', e => e.stopPropagation()); // no drag on input
+  // Use mousedown instead of blur to avoid double-fire issues
+  input.addEventListener('blur', () => { setTimeout(commit, 0); });
+  input.addEventListener('pointerdown', e => e.stopPropagation());
 
-  // Replace the element content with the input
   if (isChip) {
-    titleEl.textContent = '';
-    titleEl.appendChild(input);
+    anchorEl.textContent = '';
+    anchorEl.appendChild(input);
   } else {
-    titleEl.replaceWith(input);
+    // Swap the div for an input inline — preserve flex layout
+    anchorEl.style.display = 'none';
+    anchorEl.insertAdjacentElement('afterend', input);
   }
-  input.focus();
-  input.select();
+
+  // Defer focus so element is fully in DOM
+  setTimeout(() => { input.focus(); input.select(); }, 10);
 }
 
 function makeEntryRow(story, index) {
@@ -688,7 +703,8 @@ function makeEntryRow(story, index) {
   t.className = 'entry-title'; t.textContent = story.title; t.title = 'Double-click to rename';
   t.addEventListener('dblclick', e => {
     e.stopPropagation();
-    editStoryTitle(story, t, false);
+    e.preventDefault();
+    editStoryTitle(story.id, t, false);
   });
 
   const badge = document.createElement('span');
@@ -839,9 +855,8 @@ function makePageCell(pg, isLeft, pageMap) {
       c.title = 'Double-click to rename';
       c.addEventListener('dblclick', e2 => {
         e2.stopPropagation();
-        // strip the [Np] badge before editing
-        c.textContent = '';
-        editStoryTitle(e.story, c, true);
+        e2.preventDefault();
+        editStoryTitle(e.story.id, c, true);
       });
     } else {
       c.textContent = '— cont.';
