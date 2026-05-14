@@ -912,10 +912,14 @@ function renderGrid() {
   const grid = document.getElementById('grid');
   grid.innerHTML = '';
 
+  // Interior page count — covers never included
   const interior = storyOrder.reduce((a, id) => {
     const s = stories.find(x => x.id === id);
     return a + (s ? s.pages : 0);
   }, 0);
+
+  // Always sync the page target field to interior-only count
+  document.getElementById('pg-input').value = interior;
 
   if (interior === 0 && storyOrder.length === 0) {
     const es = document.createElement('div');
@@ -925,10 +929,9 @@ function renderGrid() {
     return;
   }
 
-  // Build page map: interior pages start at p.2
-  // p.1 = front cover; p.2 onward = interior; last two = IBC + back cover
+  // Build page map: interior pages numbered from 1 (covers not counted)
   const pageMap = {};
-  let pNum = 1; // interior pages numbered from 1 (covers excluded from count)
+  let pNum = 1;
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id);
     if (!s) return;
@@ -937,10 +940,6 @@ function renderGrid() {
       pNum++;
     }
   });
-  // pNum is now first IBC page
-  const ibcPage = pNum;
-  const bcPage  = pNum + 1;
-  const total   = interior; // covers excluded from page count
 
   // Fixed covers — FC + IFC as a paired spread
   const fcSpreadWrap = document.createElement('div');
@@ -963,9 +962,9 @@ function renderGrid() {
   fcSpreadWrap.appendChild(fcSpread);
   grid.appendChild(fcSpreadWrap);
 
-  // Interior story blocks (start at p.3)
+  // Interior story blocks — pg accumulates across all stories
   if (interior > 0) {
-    let pg = 1;
+    let pg = 1; // interior pages start at 1
     storyOrder.forEach(id => {
       const s = stories.find(x => x.id === id);
       if (!s) return;
@@ -994,7 +993,7 @@ function renderGrid() {
       }
 
       grid.appendChild(blockEl);
-      pg += s.pages;
+      pg += s.pages; // advance pg by this story's page count
     });
   }
 
@@ -1002,16 +1001,16 @@ function renderGrid() {
   grid.appendChild(makeSoloWrap('Inside Back Cover', 'IBC', null));
   grid.appendChild(makeSoloWrap('Back Cover', 'Back Cover', null));
 
-  // Status
-  document.getElementById('print-subtitle').textContent =
-    'Blair Academy Bulletin · ' + total + ' interior pages · ' + storyOrder.length + ' stories';
-  const target = parseInt(document.getElementById('pg-input').value) || total;
-  const diff   = target - total;
-  let st = storyOrder.length + ' stories · ' + total + ' interior pp (4 covers excluded)';
+  // Status — interior pages only, target is what user set
+  const target = parseInt(document.getElementById('pg-input').value) || interior;
+  const diff   = target - interior;
+  let st = storyOrder.length + ' stories · ' + interior + ' interior pp (covers excluded)';
   if      (diff > 0) st += ' · ' + diff + 'pp open';
   else if (diff < 0) st += ' · ' + Math.abs(diff) + 'pp over';
   else               st += ' · on target';
   document.getElementById('status').textContent = st;
+  document.getElementById('print-subtitle').textContent =
+    'Blair Academy Bulletin · ' + interior + ' interior pages · ' + storyOrder.length + ' stories';
 }
 
 /* ── TEXT EXPORT ── */
