@@ -459,8 +459,8 @@ body{font-family:var(--font-sans);background:var(--bg-tertiary);color:var(--text
 <!-- ── RIGHT PANEL ── -->
 <div id="right">
   <div id="right-top">
-    <label>Page target:</label>
-    <input type="number" id="pg-input" min="4" max="300" step="2">
+    <label>Interior page target:</label>
+    <input type="number" id="pg-input" min="0" max="300" step="2">
     <button class="top-btn" id="export-pdf-btn">Export PDF (8.5×11)</button>
     <button class="top-btn" id="export-txt-btn">Export text</button>
     <span id="status"></span>
@@ -928,7 +928,7 @@ function renderGrid() {
   // Build page map: interior pages start at p.2
   // p.1 = front cover; p.2 onward = interior; last two = IBC + back cover
   const pageMap = {};
-  let pNum = 3; // interior starts at page 3 (p.1=FC, p.2=IFC)
+  let pNum = 1; // interior pages numbered from 1 (covers excluded from count)
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id);
     if (!s) return;
@@ -947,13 +947,14 @@ function renderGrid() {
   fcSpreadWrap.className = 'spread-wrap cover-wrap';
   const fcLabel = document.createElement('div');
   fcLabel.className = 'spread-label cover-spread-label';
-  fcLabel.textContent = 'p.1–2 · Front Cover & Inside Front Cover';
+  fcLabel.textContent = 'Front Cover & Inside Front Cover';
   fcSpreadWrap.appendChild(fcLabel);
   const fcSpread = document.createElement('div');
   fcSpread.className = 'spread is-cover cover-spread';
   const fcCell = makeSoloCell('Front Cover', 'Front Cover');
-  fcCell.classList.add('left-page');
+  fcCell.classList.add('left-page', 'solo-cell');
   const ifcCell = makeSoloCell('Inside Front Cover', 'IFC');
+  ifcCell.classList.add('solo-cell');
   const fcSpine = document.createElement('div');
   fcSpine.className = 'spine cover-spine';
   fcSpread.appendChild(fcCell);
@@ -964,7 +965,7 @@ function renderGrid() {
 
   // Interior story blocks (start at p.3)
   if (interior > 0) {
-    let pg = 3;
+    let pg = 1;
     storyOrder.forEach(id => {
       const s = stories.find(x => x.id === id);
       if (!s) return;
@@ -998,15 +999,15 @@ function renderGrid() {
   }
 
   // Fixed back covers
-  grid.appendChild(makeSoloWrap('Inside Back Cover', 'IBC', ibcPage));
-  grid.appendChild(makeSoloWrap('Back Cover', 'Back Cover', bcPage));
+  grid.appendChild(makeSoloWrap('Inside Back Cover', 'IBC', null));
+  grid.appendChild(makeSoloWrap('Back Cover', 'Back Cover', null));
 
   // Status
   document.getElementById('print-subtitle').textContent =
     'Blair Academy Bulletin · ' + total + ' interior pages · ' + storyOrder.length + ' stories';
   const target = parseInt(document.getElementById('pg-input').value) || total;
   const diff   = target - total;
-  let st = storyOrder.length + ' stories · ' + total + 'pp interior (covers not counted)';
+  let st = storyOrder.length + ' stories · ' + total + ' interior pp (4 covers excluded)';
   if      (diff > 0) st += ' · ' + diff + 'pp open';
   else if (diff < 0) st += ' · ' + Math.abs(diff) + 'pp over';
   else               st += ' · on target';
@@ -1015,30 +1016,30 @@ function renderGrid() {
 
 /* ── TEXT EXPORT ── */
 function exportText() {
-  const pageMap = {}; let c = 3;
+  const pageMap = {}; let c = 1;
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id); if (!s) return;
     for (let i = 0; i < s.pages; i++) pageMap[c + i] = { story: s, isStart: i === 0 };
     c += s.pages;
   });
-  const total = c - 3; // interior pages only, covers excluded
+  const total = c - 1; // interior pages only, covers excluded
   const lines = [
     'BLAIR ACADEMY BULLETIN — LAYOUT PLAN',
     '======================================',
-    'p.1    Front cover',
-    'p.2    Inside front cover',
+    'Front cover (fixed)',
+    'Inside front cover (fixed)',
     '',
-    'INTERIOR (begins p.3)',
+    'INTERIOR PAGES (covers excluded from count)',
     '---------------------',
   ];
-  for (let p = 3; p < c; p += 2) {
+  for (let p = 1; p < c; p += 2) {
     const le = pageMap[p], re = pageMap[p + 1];
     const lLabel = le ? (le.isStart ? le.story.title : '— cont.') : '—';
     const rLabel = re ? (re.isStart ? re.story.title : '— cont.') : '—';
     lines.push('pp.' + String(p).padStart(3) + '–' + String(p + 1).padStart(3) + '   ' + lLabel + ' / ' + rLabel);
   }
-  lines.push('', 'p.' + c     + '   Inside back cover');
-  lines.push(     'p.' + (c+1) + '   Back cover');
+  lines.push('', 'Inside back cover (fixed)');
+  lines.push(     'Back cover (fixed)');
   lines.push('', 'Total: ' + total + ' pages · ' + storyOrder.length + ' stories');
   const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
   const a = document.createElement('a');
