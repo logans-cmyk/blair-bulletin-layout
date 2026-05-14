@@ -524,7 +524,7 @@ function calcTotal() {
     const s = stories.find(x => x.id === id);
     return a + (s ? s.pages : 0);
   }, 0);
-  return interior + 3; // front cover + IBC + back cover
+  return interior; // covers excluded from page count
 }
 function syncPageTarget() {
   document.getElementById('pg-input').value = calcTotal();
@@ -928,7 +928,7 @@ function renderGrid() {
   // Build page map: interior pages start at p.2
   // p.1 = front cover; p.2 onward = interior; last two = IBC + back cover
   const pageMap = {};
-  let pNum = 2; // interior starts at page 2
+  let pNum = 3; // interior starts at page 3 (p.1=FC, p.2=IFC)
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id);
     if (!s) return;
@@ -940,14 +940,31 @@ function renderGrid() {
   // pNum is now first IBC page
   const ibcPage = pNum;
   const bcPage  = pNum + 1;
-  const total   = interior + 3; // front cover + interior + IBC + back cover
+  const total   = interior; // covers excluded from page count
 
-  // Fixed covers
-  grid.appendChild(makeSoloWrap('Front Cover', 'Front Cover', 1));
+  // Fixed covers — FC + IFC as a paired spread
+  const fcSpreadWrap = document.createElement('div');
+  fcSpreadWrap.className = 'spread-wrap cover-wrap';
+  const fcLabel = document.createElement('div');
+  fcLabel.className = 'spread-label cover-spread-label';
+  fcLabel.textContent = 'p.1–2 · Front Cover & Inside Front Cover';
+  fcSpreadWrap.appendChild(fcLabel);
+  const fcSpread = document.createElement('div');
+  fcSpread.className = 'spread is-cover cover-spread';
+  const fcCell = makeSoloCell('Front Cover', 'Front Cover');
+  fcCell.classList.add('left-page');
+  const ifcCell = makeSoloCell('Inside Front Cover', 'IFC');
+  const fcSpine = document.createElement('div');
+  fcSpine.className = 'spine cover-spine';
+  fcSpread.appendChild(fcCell);
+  fcSpread.appendChild(fcSpine);
+  fcSpread.appendChild(ifcCell);
+  fcSpreadWrap.appendChild(fcSpread);
+  grid.appendChild(fcSpreadWrap);
 
-  // Interior story blocks (start at p.2)
+  // Interior story blocks (start at p.3)
   if (interior > 0) {
-    let pg = 2;
+    let pg = 3;
     storyOrder.forEach(id => {
       const s = stories.find(x => x.id === id);
       if (!s) return;
@@ -986,10 +1003,10 @@ function renderGrid() {
 
   // Status
   document.getElementById('print-subtitle').textContent =
-    'Blair Academy Bulletin · ' + total + ' pages · ' + storyOrder.length + ' stories (interior begins p.2)';
+    'Blair Academy Bulletin · ' + total + ' interior pages · ' + storyOrder.length + ' stories';
   const target = parseInt(document.getElementById('pg-input').value) || total;
   const diff   = target - total;
-  let st = storyOrder.length + ' stories · ' + total + 'pp total (' + interior + 'pp interior + 3 covers)';
+  let st = storyOrder.length + ' stories · ' + total + 'pp interior (covers not counted)';
   if      (diff > 0) st += ' · ' + diff + 'pp open';
   else if (diff < 0) st += ' · ' + Math.abs(diff) + 'pp over';
   else               st += ' · on target';
@@ -998,22 +1015,23 @@ function renderGrid() {
 
 /* ── TEXT EXPORT ── */
 function exportText() {
-  const pageMap = {}; let c = 2;
+  const pageMap = {}; let c = 3;
   storyOrder.forEach(id => {
     const s = stories.find(x => x.id === id); if (!s) return;
     for (let i = 0; i < s.pages; i++) pageMap[c + i] = { story: s, isStart: i === 0 };
     c += s.pages;
   });
-  const total = (c - 2) + 3;
+  const total = c - 3; // interior pages only, covers excluded
   const lines = [
     'BLAIR ACADEMY BULLETIN — LAYOUT PLAN',
     '======================================',
     'p.1    Front cover',
+    'p.2    Inside front cover',
     '',
-    'INTERIOR (begins p.2)',
+    'INTERIOR (begins p.3)',
     '---------------------',
   ];
-  for (let p = 2; p < c; p += 2) {
+  for (let p = 3; p < c; p += 2) {
     const le = pageMap[p], re = pageMap[p + 1];
     const lLabel = le ? (le.isStart ? le.story.title : '— cont.') : '—';
     const rLabel = re ? (re.isStart ? re.story.title : '— cont.') : '—';
